@@ -1,9 +1,10 @@
 package com.mrlukashem.mediacontentprovider;
 
 import com.mrlukashem.mediacontentprovider.content.IMediaContentDesc;
-import com.mrlukashem.mediacontentprovider.content.MediaContentDesc.*;
 
 import com.mrlukashem.mediacontentprovider.content.MediaContentDescBuilder;
+import com.mrlukashem.mediacontentprovider.types.MediaContentDescField;
+import com.mrlukashem.mediacontentprovider.types.MediaContentDescType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,21 +13,21 @@ public class MediaContentDescTests {
   private String artistName = "Iron Maiden";
   private String titleName = "Speed of Light";
 
-  private IMediaContentDesc firstContentDesc = new MediaContentDescBuilder(Type.TRACK)
-      .addField(Field.ALBUM, albumName)
-      .addField(Field.ARTIST, artistName)
-      .addField(Field.TITLE, titleName)
+  private IMediaContentDesc firstContentDesc = new MediaContentDescBuilder(MediaContentDescType.TRACK)
+      .addField(MediaContentDescField.ALBUM, albumName)
+      .addField(MediaContentDescField.ARTIST, artistName)
+      .addField(MediaContentDescField.TITLE, titleName)
       .build();
-  private IMediaContentDesc secondContentDesc = new MediaContentDescBuilder(Type.TRACK)
-      .addField(Field.ALBUM, albumName)
-      .addField(Field.ARTIST, artistName)
-      .addField(Field.TITLE, titleName)
+  private IMediaContentDesc secondContentDesc = new MediaContentDescBuilder(MediaContentDescType.TRACK)
+      .addField(MediaContentDescField.ALBUM, albumName)
+      .addField(MediaContentDescField.ARTIST, artistName)
+      .addField(MediaContentDescField.TITLE, titleName)
       .build();
 
-  private IMediaContentDesc thirdContentDesc = new MediaContentDescBuilder(Type.ALBUM)
-      .addField(Field.ALBUM, albumName)
-      .addField(Field.ARTIST, artistName)
-      .addField(Field.TITLE, titleName)
+  private IMediaContentDesc thirdContentDesc = new MediaContentDescBuilder(MediaContentDescType.ALBUM)
+      .addField(MediaContentDescField.ALBUM, albumName)
+      .addField(MediaContentDescField.ARTIST, artistName)
+      .addField(MediaContentDescField.TITLE, titleName)
       .build();
 
   @Test
@@ -38,16 +39,16 @@ public class MediaContentDescTests {
 
   @Test
   public void getFieldTest() {
-    IMediaContentDesc firstContentDesc = new MediaContentDescBuilder(Type.TRACK)
-        .addField(Field.ALBUM, albumName)
-        .addField(Field.ARTIST, artistName)
-        .addField(Field.TITLE, titleName)
+    IMediaContentDesc firstContentDesc = new MediaContentDescBuilder(MediaContentDescType.TRACK)
+        .addField(MediaContentDescField.ALBUM, albumName)
+        .addField(MediaContentDescField.ARTIST, artistName)
+        .addField(MediaContentDescField.TITLE, titleName)
         .build();
 
-    Assert.assertTrue(firstContentDesc.getField(Field.ALBUM).equals(albumName));
-    Assert.assertTrue(firstContentDesc.getField(Field.ARTIST).equals(artistName));
-    Assert.assertTrue(firstContentDesc.getField(Field.TITLE).equals(titleName));
-    Assert.assertFalse(firstContentDesc.getField(Field.ARTIST).equals(albumName));
-    Assert.assertFalse(firstContentDesc.getField(Field.ARTIST).equals(titleName));
+    Assert.assertTrue(firstContentDesc.getField(MediaContentDescField.ALBUM).equals(albumName));
+    Assert.assertTrue(firstContentDesc.getField(MediaContentDescField.ARTIST).equals(artistName));
+    Assert.assertTrue(firstContentDesc.getField(MediaContentDescField.TITLE).equals(titleName));
+    Assert.assertFalse(firstContentDesc.getField(MediaContentDescField.ARTIST).equals(albumName));
+    Assert.assertFalse(firstContentDesc.getField(MediaContentDescField.ARTIST).equals(titleName));
   }
 }

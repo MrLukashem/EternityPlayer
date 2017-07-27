@@ -1,47 +1,18 @@
 package com.mrlukashem.mediacontentprovider.content;
 
+import com.mrlukashem.mediacontentprovider.types.MediaContentDescField;
+import com.mrlukashem.mediacontentprovider.types.MediaContentDescType;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class MediaContentDesc implements IMediaContentDesc {
   private int contentKey;
-  private Type contentType;
-  private Map<Field, String> contentFields;
+  private MediaContentDescType contentType;
+  private Map<MediaContentDescField, String> contentFields;
 
-  public enum Type {
-    ALBUM,
-    ARTIST,
-    PLAYLIST,
-    TRACK,
-  }
-
-  public enum Field {
-    // Fields for albums
-    ALBUM,
-    ALBUM_ART,
-    ALBUM_ID,
-    ALBUM_KEY,
-    NUMBER_OF_SONGS,
-
-    // Fields for artists
-    ARTIST,
-    ARTIST_ID,
-    ARTIST_KEY,
-    NUMBER_OF_ALBUMS,
-    NUMBER_OF_TRACKS,
-
-    // Fields for tracks
-    BOOKMARK,
-    DURATION,
-    TRACK,
-    TITLE_KEY,
-    DATA,
-    TITLE,
-    MIME_TYPE,
-  }
-
-  private void initializeKey(@NotNull Map<Field, String> initialFields) {
+  private void initializeKey(@NotNull Map<MediaContentDescField, String> initialFields) {
     StringBuilder baseString = new StringBuilder(contentType.toString());
     for (String value : initialFields.values()) {
       baseString.append(value);
@@ -50,7 +21,7 @@ public class MediaContentDesc implements IMediaContentDesc {
     contentKey = baseString.toString().hashCode();
   }
 
-  MediaContentDesc(@NotNull Map<Field, String> initialFields, @NotNull Type contentType) {
+  MediaContentDesc(@NotNull Map<MediaContentDescField, String> initialFields, @NotNull MediaContentDescType contentType) {
     this.contentFields = initialFields;
     this.contentType = contentType;
     initializeKey(initialFields);
@@ -58,13 +29,13 @@ public class MediaContentDesc implements IMediaContentDesc {
 
   @NotNull
   @Override
-  public Type getType() {
+  public MediaContentDescType getType() {
     return contentType;
   }
 
   @NotNull
   @Override
-  public String getField(@NotNull Field fieldName) {
+  public String getField(@NotNull MediaContentDescField fieldName) {
     String fieldValue = contentFields.get(fieldName);
     return fieldValue != null ? fieldValue : "";
   }

@@ -1,4 +1,4 @@
-package com.mrlukashem.eternityplayer;
+package com.mrlukashem.mediacontentprovider;
 
 import org.junit.Test;
 

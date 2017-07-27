@@ -47,7 +47,7 @@ public class MediaContentDescTests {
     Assert.assertTrue(firstContentDesc.getField(Field.ALBUM).equals(albumName));
     Assert.assertTrue(firstContentDesc.getField(Field.ARTIST).equals(artistName));
     Assert.assertTrue(firstContentDesc.getField(Field.TITLE).equals(titleName));
-    Assert.assertFalse(!firstContentDesc.getField(Field.ARTIST).equals(albumName));
-    Assert.assertFalse(!firstContentDesc.getField(Field.ARTIST).equals(titleName));
+    Assert.assertFalse(firstContentDesc.getField(Field.ARTIST).equals(albumName));
+    Assert.assertFalse(firstContentDesc.getField(Field.ARTIST).equals(titleName));
   }
 }

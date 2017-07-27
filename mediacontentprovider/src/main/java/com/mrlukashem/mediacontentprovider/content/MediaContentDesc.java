@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class MediaContentDesc implements IMediaContentDesc {
-  private int _contentKey;
-  private Type _contentType;
-  private Map<Field, String> _contentFields;
+  private int contentKey;
+  private Type contentType;
+  private Map<Field, String> contentFields;
 
   public enum Type {
     ALBUM,
@@ -42,34 +42,35 @@ public class MediaContentDesc implements IMediaContentDesc {
   }
 
   private void initializeKey(@NotNull Map<Field, String> initialFields) {
-    StringBuilder baseString = new StringBuilder(_contentType.toString());
+    StringBuilder baseString = new StringBuilder(contentType.toString());
     for (String value : initialFields.values()) {
       baseString.append(value);
     }
 
-    _contentKey = baseString.toString().hashCode();
+    contentKey = baseString.toString().hashCode();
   }
 
   MediaContentDesc(@NotNull Map<Field, String> initialFields, @NotNull Type contentType) {
-    _contentFields = initialFields;
-    _contentType = contentType;
+    this.contentFields = initialFields;
+    this.contentType = contentType;
     initializeKey(initialFields);
   }
 
   @NotNull
   @Override
   public Type getType() {
-    return null;
+    return contentType;
   }
 
   @NotNull
   @Override
   public String getField(@NotNull Field fieldName) {
-    return null;
+    String fieldValue = contentFields.get(fieldName);
+    return fieldValue != null ? fieldValue : "";
   }
 
   @Override
   public int getKey() {
-    return _contentKey;
+    return contentKey;
   }
 }

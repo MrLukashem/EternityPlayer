@@ -2,12 +2,12 @@
 
           package="com.mrlukashem.mediacontentprovider"
 >
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
 
     <application android:allowBackup="true"
                  android:label="@string/app_name"
                  android:supportsRtl="true"
     >
-
     </application>
 
 </manifest>

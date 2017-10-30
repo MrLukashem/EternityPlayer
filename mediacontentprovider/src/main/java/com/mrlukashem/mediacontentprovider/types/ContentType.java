@@ -1,6 +1,6 @@
 package com.mrlukashem.mediacontentprovider.types;
 
-public enum ContentProviderType {
+public enum ContentType {
   AUDIO,
   VIDEO,
   IMAGE,

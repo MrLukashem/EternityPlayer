@@ -1,36 +1,40 @@
 package com.mrlukashem.mediacontentprovider.providers
 
 import android.content.Context
-import com.mrlukashem.mediacontentprovider.content.IMediaContentDesc
+import com.mrlukashem.mediacontentprovider.content.IMediaContentView
+import com.mrlukashem.mediacontentprovider.data.Query
 import com.mrlukashem.mediacontentprovider.types.ContentType
-import com.mrlukashem.mediacontentprovider.types.MediaContentDescType
 
-class MediaContentProvider(val appContext: Context?) : IMediaContentProvider {
+class MediaContentProvider(private val appContext: Context) : IMediaContentProvider {
+  override fun getContentByKey(key: Int): IMediaContentView {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
   override fun getType(): ContentType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContent(contentType: ContentType, mediaDescType: MediaContentDescType,
-                          maxCapacity: Int): List<IMediaContentDesc> {
+  override fun getContent(contentType: ContentType,
+                          resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                          maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContent(contentType: ContentType, mediaDescType: MediaContentDescType,
-                          resultCallback: (List<IMediaContentDesc>) -> Unit, maxCapacity: Int) {
+  override fun getContent(query: Query,
+                          resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                          maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContentFromParent(contentParent: IMediaContentDesc, expectedResult: MediaContentDescType,
+  override fun getContentFromParent(contentParent: IMediaContentView,
+                                    resultCallback: ((List<IMediaContentView>) -> Unit)?,
                                     maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContentFromParent(contentParent: IMediaContentDesc, expectedResult: MediaContentDescType,
-                                    resultCallback: (List<IMediaContentDesc>) -> Unit, maxCapacity: Int) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
-
-  override fun getContentByKey(key: Int): IMediaContentDesc {
+  override fun getContentFromParent(query: Query,
+                                    resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                                    maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 }

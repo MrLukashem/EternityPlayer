@@ -1,6 +1,6 @@
 package com.mrlukashem.mediacontentprovider.types;
 
-public enum  MediaContentDescField {
+public enum MediaContentField {
   // Fields for albums
   ALBUM,
   ALBUM_ART,

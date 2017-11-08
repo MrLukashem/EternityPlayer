@@ -1,18 +1,18 @@
 package com.mrlukashem.mediacontentprovider.content;
 
-import com.mrlukashem.mediacontentprovider.types.MediaContentDescField;
-import com.mrlukashem.mediacontentprovider.types.MediaContentDescType;
+import com.mrlukashem.mediacontentprovider.types.ContentType;
+import com.mrlukashem.mediacontentprovider.types.MediaContentField;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class MediaContentDesc implements IMediaContentDesc {
+public class MediaContentView implements IMediaContentView {
   private int contentKey;
-  private MediaContentDescType contentType;
-  private Map<MediaContentDescField, String> contentFields;
+  private ContentType contentType;
+  private Map<MediaContentField, String> contentFields;
 
-  private void initializeKey(@NotNull Map<MediaContentDescField, String> initialFields) {
+  private void initializeKey(@NotNull Map<MediaContentField, String> initialFields) {
     StringBuilder baseString = new StringBuilder(contentType.toString());
     for (String value : initialFields.values()) {
       baseString.append(value);
@@ -21,7 +21,8 @@ public class MediaContentDesc implements IMediaContentDesc {
     contentKey = baseString.toString().hashCode();
   }
 
-  MediaContentDesc(@NotNull Map<MediaContentDescField, String> initialFields, @NotNull MediaContentDescType contentType) {
+  MediaContentView(@NotNull Map<MediaContentField, String> initialFields,
+                   @NotNull ContentType contentType) {
     this.contentFields = initialFields;
     this.contentType = contentType;
     initializeKey(initialFields);
@@ -29,13 +30,13 @@ public class MediaContentDesc implements IMediaContentDesc {
 
   @NotNull
   @Override
-  public MediaContentDescType getType() {
+  public ContentType getType() {
     return contentType;
   }
 
   @NotNull
   @Override
-  public String getField(@NotNull MediaContentDescField fieldName) {
+  public String getField(@NotNull MediaContentField fieldName) {
     String fieldValue = contentFields.get(fieldName);
     return fieldValue != null ? fieldValue : "";
   }

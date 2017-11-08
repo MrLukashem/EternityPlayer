@@ -1,11 +1,12 @@
 package com.mrlukashem.mediacontentprovider.data
 
+import android.content.ContentResolver
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView
 import com.mrlukashem.mediacontentprovider.types.ContentType
 
-class MediaDatabaseHandler : DataHandler {
+class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler {
   private val map: Map<String, (String) -> Unit> = mapOf(
-          ContentType.AUDIO_ALBUM.name to {
+          ContentType.MainType.AUDIO + "." + ContentType.SubType.ALBUM to {
             s: String -> print(s)
           }
   )

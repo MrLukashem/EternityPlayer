@@ -2,13 +2,10 @@ package com.mrlukashem.mediacontentprovider.data
 
 import android.content.ContentResolver
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView
-import com.mrlukashem.mediacontentprovider.types.ContentType
 
 class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler {
   private val map: Map<String, (String) -> Unit> = mapOf(
-          ContentType.MainType.AUDIO + "." + ContentType.SubType.ALBUM to {
-            s: String -> print(s)
-          }
+
   )
 
   override fun insert(data: List<IMediaContentView>) {
@@ -28,5 +25,6 @@ class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler 
   }
 
   override fun query(query: Query): List<IMediaContentView> {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 }

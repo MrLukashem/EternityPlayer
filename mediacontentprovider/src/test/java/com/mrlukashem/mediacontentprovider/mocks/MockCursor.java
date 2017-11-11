@@ -8,25 +8,41 @@ import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView;
+import com.mrlukashem.mediacontentprovider.types.MediaContentField;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiPredicate;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class MockCursor implements Cursor {
+  private static final int BEFORE_FIRST = -1;
+
+  private Map<MediaContentField.FieldName, Integer> fieldToColumn =
+          new HashMap<>();
+
   private List<IMediaContentView> contentViews;
   private int count = 0;
-  private int position = 0;
+  private int position = BEFORE_FIRST;
 
-  private boolean updatePosition(int firstArg, int secondArg) {
-    boolean succeedMove = firstArg < count;
-    position = succeedMove ? firstArg : secondArg;
+  private void initFieldToColumnMap() {
+  }
+
+  private boolean updatePosition(int newValue, int defaultValue,
+                                 BiPredicate<Integer, Integer> predicate) {
+    boolean succeedMove =  predicate.test(newValue, count);
+    position = succeedMove ? newValue : defaultValue;
 
     return succeedMove;
   }
 
-  public MockCursor(@NotNull List<IMediaContentView> contentViews) {
+  MockCursor(@NotNull List<IMediaContentView> contentViews) {
     this.contentViews = contentViews;
     this.count = contentViews.size();
+
+    initFieldToColumnMap();
   }
 
   @Override
@@ -46,7 +62,7 @@ public class MockCursor implements Cursor {
 
   @Override
   public boolean moveToPosition(int i) {
-    return updatePosition(i, position);
+    return updatePosition(i, position, (a, b) -> a < b && a >= 0);
   }
 
   @Override
@@ -63,15 +79,12 @@ public class MockCursor implements Cursor {
 
   @Override
   public boolean moveToNext() {
-    boolean succeedMove = position + 1 < count;
-    position = succeedMove ? position + 1 : position;
-
-    return succeedMove;
+    return updatePosition(position + 1, position, (a, b) -> a < b);
   }
 
   @Override
   public boolean moveToPrevious() {
-    throw new NotImplementedException();
+    return updatePosition(position - 1, position, (a, b) -> a >= 0);
   }
 
   @Override
@@ -86,7 +99,7 @@ public class MockCursor implements Cursor {
 
   @Override
   public boolean isBeforeFirst() {
-    throw new NotImplementedException();
+    return position == BEFORE_FIRST;
   }
 
   @Override

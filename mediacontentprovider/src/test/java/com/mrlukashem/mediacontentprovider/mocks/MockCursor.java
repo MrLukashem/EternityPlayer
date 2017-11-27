@@ -1,34 +1,35 @@
 package com.mrlukashem.mediacontentprovider.mocks;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.CharArrayBuffer;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
-import com.mrlukashem.mediacontentprovider.content.IMediaContentView;
-import com.mrlukashem.mediacontentprovider.types.MediaContentField;
+import android.support.annotation.NonNull;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiPredicate;
 
-import org.jetbrains.annotations.NotNull;
-
 public class MockCursor implements Cursor {
+  private static final String ILLEGAL_STATE_EXCEPTION_MSG =
+          "Wrong the Cursor state. Please check the position of Cursor.";
+  private static final String ILLEGAL_ARGUMENT_EXCEPTION_MSG =
+          "Passed column index does not exist.";
+  private static final String NO_INDEX_FOUND_MSG =
+          "No index found.";
   private static final int BEFORE_FIRST = -1;
+  private static final int ERROR_CODE = -1;
 
-  private Map<MediaContentField.FieldName, Integer> fieldToColumn =
-          new HashMap<>();
-
-  private List<IMediaContentView> contentViews;
+  private List<ContentValues> contentValues;
+  private String[] projection;
   private int count = 0;
   private int position = BEFORE_FIRST;
-
-  private void initFieldToColumnMap() {
-  }
+  // Mock closed.
+  private boolean isClosed = false;
 
   private boolean updatePosition(int newValue, int defaultValue,
                                  BiPredicate<Integer, Integer> predicate) {
@@ -38,11 +39,16 @@ public class MockCursor implements Cursor {
     return succeedMove;
   }
 
-  MockCursor(@NotNull List<IMediaContentView> contentViews) {
-    this.contentViews = contentViews;
-    this.count = contentViews.size();
+  private void checkStake() throws IllegalStateException {
+    if (isBeforeFirst() || isAfterLast()) {
+      throw new IllegalStateException(ILLEGAL_STATE_EXCEPTION_MSG);
+    }
+  }
 
-    initFieldToColumnMap();
+  MockCursor(@NonNull String[] projection, @NonNull List<ContentValues> contentValues) {
+    this.contentValues = contentValues;
+    this.projection = projection;
+    this.count = this.contentValues.size();
   }
 
   @Override
@@ -109,27 +115,36 @@ public class MockCursor implements Cursor {
 
   @Override
   public int getColumnIndex(String s) {
-    throw new NotImplementedException();
+    for (int i = 0; i < projection.length; i++) {
+      if (projection[i].equals(s)) {
+        return i;
+      }
+    }
+
+    return ERROR_CODE;
   }
 
   @Override
   public int getColumnIndexOrThrow(String s) throws IllegalArgumentException {
-    throw new NotImplementedException();
+    int idx = getColumnIndex(s);
+    if (idx != ERROR_CODE) return idx;
+
+    throw new IllegalArgumentException(NO_INDEX_FOUND_MSG);
   }
 
   @Override
   public String getColumnName(int i) {
-    throw new NotImplementedException();
+    return i >= 0 && i < projection.length ? projection[i] : "";
   }
 
   @Override
   public String[] getColumnNames() {
-    throw new NotImplementedException();
+    return Arrays.copyOfRange(projection, 0, projection.length);
   }
 
   @Override
   public int getColumnCount() {
-    throw new NotImplementedException();
+    return projection.length;
   }
 
   @Override
@@ -138,8 +153,19 @@ public class MockCursor implements Cursor {
   }
 
   @Override
-  public String getString(int i) {
-    throw new NotImplementedException();
+  public String getString(int i) throws IllegalArgumentException, IllegalStateException {
+    return getValue(i, String.class);
+  }
+
+  private <T> T getValue(int i, Class<T> clazz)
+          throws IllegalArgumentException, IllegalStateException {
+    try {
+      checkStake();
+      ContentValues currentRow = contentValues.get(position);
+      return clazz.cast(currentRow.get(projection[i]));
+    } catch (Exception exc) {
+      throw new IllegalArgumentException(ILLEGAL_ARGUMENT_EXCEPTION_MSG);
+    }
   }
 
   @Override
@@ -148,28 +174,28 @@ public class MockCursor implements Cursor {
   }
 
   @Override
-  public short getShort(int i) {
-    throw new NotImplementedException();
+  public short getShort(int i) throws IllegalArgumentException, IllegalStateException {
+    return getValue(i, Short.class);
   }
 
   @Override
-  public int getInt(int i) {
-    throw new NotImplementedException();
+  public int getInt(int i) throws IllegalArgumentException, IllegalStateException {
+    return getValue(i, Integer.class);
   }
 
   @Override
-  public long getLong(int i) {
-    throw new NotImplementedException();
+  public long getLong(int i) throws IllegalArgumentException, IllegalStateException {
+    return getValue(i, Long.class);
   }
 
   @Override
-  public float getFloat(int i) {
-    throw new NotImplementedException();
+  public float getFloat(int i) throws IllegalArgumentException, IllegalStateException {
+    return getValue(i, Float.class);
   }
 
   @Override
-  public double getDouble(int i) {
-    throw new NotImplementedException();
+  public double getDouble(int i) throws IllegalArgumentException, IllegalStateException {
+    return getValue(i, Double.class);
   }
 
   @Override
@@ -194,12 +220,12 @@ public class MockCursor implements Cursor {
 
   @Override
   public void close() {
-    throw new NotImplementedException();
+    isClosed = true;
   }
 
   @Override
   public boolean isClosed() {
-    throw new NotImplementedException();
+    return isClosed;
   }
 
   @Override

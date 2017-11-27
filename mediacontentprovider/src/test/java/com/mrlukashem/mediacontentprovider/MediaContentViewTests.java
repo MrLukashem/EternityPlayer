@@ -1,14 +1,18 @@
 package com.mrlukashem.mediacontentprovider;
 
+import android.test.ActivityTestCase;
+
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView;
 
+import com.mrlukashem.mediacontentprovider.content.MediaContentViewBuilder;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
 import com.mrlukashem.mediacontentprovider.types.MediaContentField;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class MediaContentViewTests {
+public class MediaContentViewTests extends ActivityTestCase {
   private String albumName = "The Book of Souls";
   private String artistName = "Iron Maiden";
   private String titleName = "Speed of Light";

@@ -12,7 +12,15 @@ class Query(val contentType: ContentType,
               sortOrder: SortOrder? = SortOrder.ASC,
               selectionCriteria: List<SelectionCriterion>? = null,
               vararg fieldsToWithdraw: MediaContentField.FieldName)
-          : this(contentType, sortOrder, selectionCriteria, fieldsToWithdraw.toList()) {}
+          : this(contentType, sortOrder, selectionCriteria, fieldsToWithdraw.toList())
+
+  constructor(mainType: ContentType.MainType,
+              subType: ContentType.SubType,
+              sortOrder: SortOrder? = SortOrder.ASC,
+              selectionCriteria: List<SelectionCriterion>? = null,
+              vararg fieldsToWithdraw: MediaContentField.FieldName)
+          : this(ContentType(mainType, subType), sortOrder, selectionCriteria,
+            fieldsToWithdraw.toList())
 
   enum class SortOrder {
     DESC,

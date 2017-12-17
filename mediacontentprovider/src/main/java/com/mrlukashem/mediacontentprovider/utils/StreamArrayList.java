@@ -26,6 +26,11 @@ public class StreamArrayList<E> extends ArrayList<E> implements List<E> {
 
     @Override
     public List<E> streamForEach(Consumer<? super E> consumer) {
-        return new Stream<>(this).mutableForEach(consumer).collect();
+        return null;
+    }
+
+    @Override
+    public List<E> subStreamList(int first, int last) {
+        return null;
     }
 }

@@ -31,6 +31,12 @@ class MediaContentProvider() : IMediaContentProvider {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
+  override fun getContent(wildCardWorlds: List<String>,
+                          resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                          maxCapacity: Int) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
   override fun getContent(contentType: ContentType,
                           resultCallback: ((List<IMediaContentView>) -> Unit)?,
                           maxCapacity: Int) {

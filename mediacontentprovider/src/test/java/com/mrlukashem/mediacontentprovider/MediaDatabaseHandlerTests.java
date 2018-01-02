@@ -30,7 +30,7 @@ public class MediaDatabaseHandlerTests {
         QueryView queryView = new QueryView(
                 ContentType.MainType.AUDIO,
                 ContentType.SubType.TRACK,
-                QueryView.SortOrder.ASC,
+                null,
                 null,
                 MediaContentField.FieldName.TITLE, MediaContentField.FieldName.ALBUM);
         List<IMediaContentView> tracks = handler.query(queryView);

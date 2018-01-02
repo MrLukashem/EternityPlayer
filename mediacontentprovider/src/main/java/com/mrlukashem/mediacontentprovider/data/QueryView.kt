@@ -4,31 +4,32 @@ import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.MediaContentField
 
 class QueryView(val contentType: ContentType,
-                val sortOrder: SortOrder? = SortOrder.ASC,
-                val selectionCriteria: List<SelectionCriterion>? = null,
-                val fieldsToWithdraw: List<MediaContentField.FieldName>? = null) {
+                val sortOption: SortOption? = null,
+                val selectionOptions: List<SelectionOption>? = null,
+                val fieldsProjection: List<MediaContentField.FieldName>? = null) {
 
   constructor(contentType: ContentType,
-              sortOrder: SortOrder? = SortOrder.ASC,
-              selectionCriteria: List<SelectionCriterion>? = null,
-              vararg fieldsToWithdraw: MediaContentField.FieldName)
-          : this(contentType, sortOrder, selectionCriteria, fieldsToWithdraw.toList())
+              sortOption: SortOption? = null,
+              selectionOptions: List<SelectionOption>? = null,
+              vararg fieldsProjection: MediaContentField.FieldName)
+          : this(contentType, sortOption, selectionOptions, fieldsProjection.toList())
 
   constructor(mainType: ContentType.MainType,
               subType: ContentType.SubType,
-              sortOrder: SortOrder? = SortOrder.ASC,
-              selectionCriteria: List<SelectionCriterion>? = null,
-              vararg fieldsToWithdraw: MediaContentField.FieldName)
-          : this(ContentType(mainType, subType), sortOrder, selectionCriteria,
-            fieldsToWithdraw.toList())
+              sortOption: SortOption? = null,
+              selectionOptions: List<SelectionOption>? = null,
+              vararg fieldsProjection: MediaContentField.FieldName)
+          : this(ContentType(mainType, subType), sortOption, selectionOptions)
 
-  enum class SortOrder {
-    DESC,
-    ASC,
+  class SortOption(val field: MediaContentField.FieldName, val sortType: SortType) {
+    enum class SortType {
+      DESC,
+      ASC,
+    }
   }
 
-  class SelectionCriterion(val field: MediaContentField, val op: SelectionOperator) {
-    enum class SelectionOperator {
+  class SelectionOption(val field: MediaContentField, val type: SelectionType) {
+    enum class SelectionType {
       EQUALS,
       EQUALS_GREATER,
       EQUALS_LESS,

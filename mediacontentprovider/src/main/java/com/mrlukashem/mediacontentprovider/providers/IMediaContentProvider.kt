@@ -14,6 +14,9 @@ interface IMediaContentProvider {
                  resultCallback: ((List<IMediaContentView>) -> Unit)? = null, maxCapacity: Int = -1)
   fun getContent(queryView: QueryView,
                  resultCallback: ((List<IMediaContentView>) -> Unit)? = null, maxCapacity: Int = -1)
+  fun getContent(wildCardWorlds: List<String>,
+                 resultCallback: ((List<IMediaContentView>) -> Unit)? = null,
+                 maxCapacity: Int = -1)
   fun getContentFromParent(contentParent: IMediaContentView,
                            resultCallback: ((List<IMediaContentView>) -> Unit)? = null,
                            maxCapacity: Int = -1)

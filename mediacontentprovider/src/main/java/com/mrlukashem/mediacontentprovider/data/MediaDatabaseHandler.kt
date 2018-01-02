@@ -1,15 +1,26 @@
 package com.mrlukashem.mediacontentprovider.data
 
 import android.content.ContentResolver
+import android.net.Uri
+import android.provider.MediaStore
+
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView
+import com.mrlukashem.mediacontentprovider.types.ContentType
 
 class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler {
-  private val map: Map<String, (String) -> Unit> = mapOf(
-
+  protected val sourceTableUriFactory: Map<String, Uri> = mapOf(
+          ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM).toString()
+                  to MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+          ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ARTIST).toString()
+                  to MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
+          ContentType(ContentType.MainType.AUDIO, ContentType.SubType.PLAYLIST).toString()
+                  to MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+          ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK).toString()
+                  to MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
   )
 
   override fun insert(data: List<IMediaContentView>) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    TODO("not implemented") //To change body of created functions use File | Settings | File Template
   }
 
   override fun update(oldData: List<IMediaContentView>, newData: List<IMediaContentView>) {
@@ -20,11 +31,12 @@ class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler 
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun delete(query: Query) {
+  override fun delete(queryView: QueryView) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun query(query: Query): List<IMediaContentView> {
+  override fun query(queryView: QueryView): List<IMediaContentView> {
+    val sourceTableUri = sourceTableUriFactory[queryView.contentType.toString()]
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 }

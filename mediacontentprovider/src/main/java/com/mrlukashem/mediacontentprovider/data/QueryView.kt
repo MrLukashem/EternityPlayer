@@ -3,10 +3,10 @@ package com.mrlukashem.mediacontentprovider.data
 import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.MediaContentField
 
-class Query(val contentType: ContentType,
-            val sortOrder: SortOrder? = SortOrder.ASC,
-            val selectionCriteria: List<SelectionCriterion>? = null,
-            val fieldsToWithdraw: List<MediaContentField.FieldName>? = null) {
+class QueryView(val contentType: ContentType,
+                val sortOrder: SortOrder? = SortOrder.ASC,
+                val selectionCriteria: List<SelectionCriterion>? = null,
+                val fieldsToWithdraw: List<MediaContentField.FieldName>? = null) {
 
   constructor(contentType: ContentType,
               sortOrder: SortOrder? = SortOrder.ASC,

@@ -4,7 +4,7 @@ import android.test.mock.MockContentResolver;
 
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView;
 import com.mrlukashem.mediacontentprovider.data.MediaDatabaseHandler;
-import com.mrlukashem.mediacontentprovider.data.Query;
+import com.mrlukashem.mediacontentprovider.data.QueryView;
 import com.mrlukashem.mediacontentprovider.mocks.ContentProviderDataInfo;
 import com.mrlukashem.mediacontentprovider.mocks.CustomMockContentProvider;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
@@ -27,13 +27,13 @@ public class MediaDatabaseHandlerTests {
 
     @Test
     public void testQuery() {
-        Query query = new Query(
+        QueryView queryView = new QueryView(
                 ContentType.MainType.AUDIO,
                 ContentType.SubType.TRACK,
-                Query.SortOrder.ASC,
+                QueryView.SortOrder.ASC,
                 null,
                 MediaContentField.FieldName.TITLE, MediaContentField.FieldName.ALBUM);
-        List<IMediaContentView> tracks = handler.query(query);
+        List<IMediaContentView> tracks = handler.query(queryView);
         Assert.assertTrue(tracks.size() == providerInfo.getTotalTracks());
     }
 }

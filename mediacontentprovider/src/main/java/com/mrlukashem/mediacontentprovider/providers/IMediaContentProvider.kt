@@ -1,7 +1,7 @@
 package com.mrlukashem.mediacontentprovider.providers
 
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView
-import com.mrlukashem.mediacontentprovider.data.Query
+import com.mrlukashem.mediacontentprovider.data.QueryView
 import com.mrlukashem.mediacontentprovider.types.ContentType
 
 interface IMediaContentProvider {
@@ -12,12 +12,12 @@ interface IMediaContentProvider {
   fun getType(): ContentType
   fun getContent(contentType: ContentType,
                  resultCallback: ((List<IMediaContentView>) -> Unit)? = null, maxCapacity: Int = -1)
-  fun getContent(query: Query,
+  fun getContent(queryView: QueryView,
                  resultCallback: ((List<IMediaContentView>) -> Unit)? = null, maxCapacity: Int = -1)
   fun getContentFromParent(contentParent: IMediaContentView,
                            resultCallback: ((List<IMediaContentView>) -> Unit)? = null,
                            maxCapacity: Int = -1)
-  fun getContentFromParent(query: Query,
+  fun getContentFromParent(queryView: QueryView,
                            resultCallback: ((List<IMediaContentView>) -> Unit)? = null,
                            maxCapacity: Int = -1)
 }

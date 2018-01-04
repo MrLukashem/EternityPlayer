@@ -15,14 +15,14 @@ class QueryViewBuilderTestsForKotlin {
     fun queryViewBuilderCompare() {
         val firstView = QueryView.build {
             contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-            fieldsProjection = listOf(
+            fieldsProjection = mutableListOf(
                     MediaContentField.FieldName.DATA,
                     MediaContentField.FieldName.ALBUM,
                     MediaContentField.FieldName.TITLE)
         }
         val secondView = QueryView.build {
             contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-            fieldsProjection = listOf(
+            fieldsProjection = mutableListOf(
                     MediaContentField.FieldName.DATA,
                     MediaContentField.FieldName.ALBUM,
                     MediaContentField.FieldName.TITLE)

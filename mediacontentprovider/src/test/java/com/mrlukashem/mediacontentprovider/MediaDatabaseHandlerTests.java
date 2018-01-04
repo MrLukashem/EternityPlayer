@@ -27,8 +27,6 @@ public class MediaDatabaseHandlerTests {
 
     @Test
     public void testQuery() {
-        QueryView.QueryViewBuilder builder = new QueryView.QueryViewBuilder();
-
         QueryView queryView = new QueryView(
                 ContentType.MainType.AUDIO,
                 ContentType.SubType.TRACK,

@@ -27,11 +27,11 @@ public class MediaDatabaseHandlerTests {
 
     @Test
     public void testQuery() {
+        QueryView.QueryViewBuilder builder = new QueryView.QueryViewBuilder();
+
         QueryView queryView = new QueryView(
                 ContentType.MainType.AUDIO,
                 ContentType.SubType.TRACK,
-                null,
-                null,
                 MediaContentField.FieldName.TITLE, MediaContentField.FieldName.ALBUM);
         List<IMediaContentView> tracks = handler.query(queryView);
         Assert.assertTrue(tracks.size() == providerInfo.getTotalTracks());

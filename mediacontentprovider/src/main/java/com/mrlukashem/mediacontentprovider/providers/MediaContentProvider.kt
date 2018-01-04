@@ -40,7 +40,7 @@ class MediaContentProvider() : IMediaContentProvider {
   override fun getContent(contentType: ContentType,
                           resultCallback: ((List<IMediaContentView>) -> Unit)?,
                           maxCapacity: Int) {
-    val content = dataHandler?.query(QueryView(contentType, null, null, null))
+    val content = dataHandler?.query(QueryView(contentType))
     resultCallback?.invoke(content ?: ArrayList())
   }
 

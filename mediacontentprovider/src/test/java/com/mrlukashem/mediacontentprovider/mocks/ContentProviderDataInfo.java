@@ -10,4 +10,5 @@ public interface ContentProviderDataInfo {
     int getTotalTracks();
     int getTotalAlbums();
     ContentProvider getProvider();
+    void reset();
 }

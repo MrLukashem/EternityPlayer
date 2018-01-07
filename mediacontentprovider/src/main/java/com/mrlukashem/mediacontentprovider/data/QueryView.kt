@@ -5,21 +5,22 @@ import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.MediaContentField
 
 /*
+ * Represents abstract Query - very similar to query from ContentResolver in Android.
  * @property contentType type of a content that a user want to fetch.
  * @property fieldsProjection, fields of a content that a user want to fetch.
  * @property selectionOptions, a list of SelectionOption (filtering).
  * @property sortOption, sort type that a user want to apply for fetched content.
  */
 data class QueryView(val contentType: ContentType,
-                val fieldsProjection: List<MediaContentField.FieldName> = ArrayList(),
-                val selectionOptions: List<SelectionOption> = ArrayList(),
-                val sortOption: SortOption? = null) {
+                     val fieldsProjection: Set<MediaContentField.FieldName> = HashSet(),
+                     val selectionOptions: Set<SelectionOption> = HashSet(),
+                     val sortOption: SortOption? = null) {
 
   constructor(contentType: ContentType,
-              selectionOptions: List<SelectionOption> = ArrayList(),
+              selectionOptions: Set<SelectionOption> = HashSet(),
               sortOption: SortOption? = null,
               vararg fieldsProjection: MediaContentField.FieldName)
-          : this(contentType, fieldsProjection.toList(), selectionOptions, sortOption)
+          : this(contentType, fieldsProjection.toSet(), selectionOptions, sortOption)
 
   /*
     The constructor is only for Java users of the class.
@@ -27,12 +28,12 @@ data class QueryView(val contentType: ContentType,
   constructor(mainType: ContentType.MainType,
               subType: ContentType.SubType,
               vararg fieldsProjection: MediaContentField.FieldName)
-          : this(ContentType(mainType, subType), fieldsProjection.toList())
+          : this(ContentType(mainType, subType), fieldsProjection.toSet())
 
   constructor(mainType: ContentType.MainType,
               subType: ContentType.SubType,
-              fieldsProjection: List<MediaContentField.FieldName> = ArrayList(),
-              selectionOptions: List<SelectionOption> = ArrayList(),
+              fieldsProjection: Set<MediaContentField.FieldName> = HashSet(),
+              selectionOptions: Set<SelectionOption> = HashSet(),
               sortOption: SortOption? = null)
           : this(ContentType(mainType, subType), fieldsProjection, selectionOptions, sortOption)
 
@@ -42,10 +43,10 @@ data class QueryView(val contentType: ContentType,
   }
 
   class QueryViewBuilder() : Builder<QueryView> {
-    lateinit var contentType: ContentType
+    var contentType: ContentType = ContentType()
     var sortOption: SortOption? = null
-    var selectionOptions: MutableList<SelectionOption> = ArrayList()
-    var fieldsProjection: MutableList<MediaContentField.FieldName> = ArrayList()
+    var selectionOptions: MutableSet<SelectionOption> = HashSet()
+    var fieldsProjection: MutableSet<MediaContentField.FieldName> = HashSet()
 
     constructor(init: QueryViewBuilder.() -> Unit): this() {
       init()
@@ -54,14 +55,23 @@ data class QueryView(val contentType: ContentType,
     override fun from(tBase: QueryView): Builder<QueryView> {
       contentType = tBase.contentType
       sortOption = tBase.sortOption
-      selectionOptions = tBase.selectionOptions.toMutableList()
-      fieldsProjection = tBase.fieldsProjection.toMutableList()
+      selectionOptions = tBase.selectionOptions.toMutableSet()
+      fieldsProjection = tBase.fieldsProjection.toMutableSet()
 
       return this
     }
 
     override fun build(): QueryView {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+      return QueryView(contentType, fieldsProjection, selectionOptions, sortOption);
+    }
+
+    override fun reset(): Builder<QueryView> {
+      contentType = ContentType()
+      sortOption = null
+      selectionOptions.clear()
+      fieldsProjection.clear()
+
+      return this
     }
 
     /*
@@ -93,7 +103,7 @@ data class QueryView(val contentType: ContentType,
   /*
    * SortOption describe a sort type that a user want to apply to a MediaProvider result.
    */
-  class SortOption(val field: MediaContentField.FieldName, val sortType: SortType) {
+  data class SortOption(val field: MediaContentField.FieldName, val sortType: SortType) {
     enum class SortType {
       DESC,
       ASC,
@@ -104,7 +114,10 @@ data class QueryView(val contentType: ContentType,
    * The class describes selection for data from a MediaProvider. It is used to filter rows by using
    * SelectionType sub enum class and a passed field in constructor.
    */
-  class SelectionOption(val field: MediaContentField, val type: SelectionType) {
+  data class SelectionOption(val field: MediaContentField, val type: SelectionType) {
+    constructor(fieldName: MediaContentField.FieldName, fieldValue: String, type: SelectionType)
+      : this(MediaContentField(fieldName, fieldValue), type)
+
     enum class SelectionType {
       EQUALS,
       EQUALS_GREATER,

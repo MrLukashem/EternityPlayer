@@ -40,73 +40,8 @@ public class CustomMockContentProvider
     }
   }
 
-  private class SelectionPredicateFactory {
-    Map<String, Predicate<String>> createPredicates(
-            @NonNull String selection, @NonNull String[] selectionArgs) {
-      final String[] cols = selection.split(".+//s*=//s*//?]");
-      Map<String, Predicate<String>> predicates = new HashMap<>();
-
-      if (cols.length == selectionArgs.length) {
-        for (int i = 0; i < selectionArgs.length; i++) {
-          final String selectionArg = selectionArgs[i];
-          predicates.put(cols[i], (colValue) -> colValue.equals(selectionArg));
-        }
-      }
-
-      return predicates;
-    }
-  }
-
   private List<DataSet> dataSets = new StreamArrayList<>();
   private Cursor currentCursor;
-
-  // TODO: Temporary hard-coded. It should be loaded from a file.
-  private void initDataSetKillers() {
-    String[] cols = new String[] {
-            "ARTIST",
-            "DATA",
-            "ALBUM",
-            "TITLE",
-            "MIME_TYPE",
-            "SIZE",
-    };
-    List<ContentValues> rows = new StreamArrayList<>();
-    ContentValues tempContentValues = new ContentValues();
-
-    tempContentValues.put("ARTIST", "Iron Maiden");
-    tempContentValues.put("DATA", "NONE");
-    tempContentValues.put("ALBUM", "Killers");
-    tempContentValues.put("TITLE", "Killers");
-    tempContentValues.put("MIME_TYPE", "audio/mpeg");
-    tempContentValues.put("SIZE", (long)(666));
-    rows.add(tempContentValues);
-
-    tempContentValues = new ContentValues();
-    tempContentValues.put("ARTIST", "Iron Maiden");
-    tempContentValues.put("DATA", "NONE");
-    tempContentValues.put("ALBUM", "Killers");
-    tempContentValues.put("TITLE", "Wrathchild");
-    tempContentValues.put("MIME_TYPE", "audio/mpeg");
-    tempContentValues.put("SIZE", (long)(432));
-    rows.add(tempContentValues);
-
-    tempContentValues = new ContentValues();
-    tempContentValues.put("ARTIST", "Iron Maiden");
-    tempContentValues.put("DATA", "NONE");
-    tempContentValues.put("ALBUM", "Killers");
-    tempContentValues.put("TITLE", "Another Life");
-    tempContentValues.put("MIME_TYPE", "audio/mpeg");
-    tempContentValues.put("SIZE", (long)(100043));
-    rows.add(tempContentValues);
-
-    dataSets.add(new DataSet(
-            new StreamArrayList<>(Arrays.asList(cols)),
-            rows));
-  }
-
-  private void initContentValues() {
-    initDataSetKillers();
-  }
 
   public CustomMockContentProvider() {
     super();
@@ -164,5 +99,77 @@ public class CustomMockContentProvider
   @Override
   public ContentProvider getProvider() {
     return this;
+  }
+
+  @Override
+  public void reset() {
+
+  }
+
+  // TODO: Temporary hard-coded. It should be loaded from a file.
+  private void initDataSetKillers() {
+    dataSets.clear();
+
+    String[] cols = new String[] {
+            "ARTIST",
+            "DATA",
+            "ALBUM",
+            "TITLE",
+            "MIME_TYPE",
+            "SIZE",
+    };
+    List<ContentValues> rows = new StreamArrayList<>();
+    ContentValues tempContentValues = new ContentValues();
+
+    tempContentValues.put("ARTIST", "Iron Maiden");
+    tempContentValues.put("DATA", "NONE");
+    tempContentValues.put("ALBUM", "Killers");
+    tempContentValues.put("TITLE", "Killers");
+    tempContentValues.put("MIME_TYPE", "audio/mpeg");
+    tempContentValues.put("SIZE", (long)(666));
+    rows.add(tempContentValues);
+
+    tempContentValues = new ContentValues();
+    tempContentValues.put("ARTIST", "Iron Maiden");
+    tempContentValues.put("DATA", "NONE");
+    tempContentValues.put("ALBUM", "Killers");
+    tempContentValues.put("TITLE", "Wrathchild");
+    tempContentValues.put("MIME_TYPE", "audio/mpeg");
+    tempContentValues.put("SIZE", (long)(432));
+    rows.add(tempContentValues);
+
+    tempContentValues = new ContentValues();
+    tempContentValues.put("ARTIST", "Iron Maiden");
+    tempContentValues.put("DATA", "NONE");
+    tempContentValues.put("ALBUM", "Killers");
+    tempContentValues.put("TITLE", "Another Life");
+    tempContentValues.put("MIME_TYPE", "audio/mpeg");
+    tempContentValues.put("SIZE", (long)(100043));
+    rows.add(tempContentValues);
+
+    dataSets.add(new DataSet(
+            new StreamArrayList<>(Arrays.asList(cols)),
+            rows));
+  }
+
+  private void initContentValues() {
+    initDataSetKillers();
+  }
+
+  private class SelectionPredicateFactory {
+    Map<String, Predicate<String>> createPredicates(
+            @NonNull String selection, @NonNull String[] selectionArgs) {
+      final String[] cols = selection.split(".+//s*=//s*//?]");
+      Map<String, Predicate<String>> predicates = new HashMap<>();
+
+      if (cols.length == selectionArgs.length) {
+        for (int i = 0; i < selectionArgs.length; i++) {
+          final String selectionArg = selectionArgs[i];
+          predicates.put(cols[i], (colValue) -> colValue.equals(selectionArg));
+        }
+      }
+
+      return predicates;
+    }
   }
 }

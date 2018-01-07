@@ -3,24 +3,13 @@ package com.mrlukashem.mediacontentprovider.content
 import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.MediaContentField
 
-class MediaContentView internal constructor(override val contentFields: List<MediaContentField>,
-                                            override val contentType: ContentType)
+data class MediaContentView internal constructor(
+        override val contentFields: List<MediaContentField>, override val contentType: ContentType,
+        override val contentHandle: Int)
     : IMediaContentView {
-    override var contentKey: Int = 0
-    private set
 
-    private fun initializeKey(initialFields: List<MediaContentField>) {
-        val baseString = StringBuilder(contentType.toString())
-        initialFields.forEach {
-            baseString.append(it.fieldValue)
-        }
-
-        contentKey = baseString.toString().hashCode()
-    }
-
-    init {
-        initializeKey(contentFields)
-    }
+    constructor(contentFields: List<MediaContentField>, contentType: ContentType)
+    : this(contentFields, contentType, IMediaContentView.HANDLE_NOT_INITIALIZED)
 
     override fun getFieldValue(fieldName: MediaContentField.FieldName) : String {
         val fieldValue = contentFields.find {

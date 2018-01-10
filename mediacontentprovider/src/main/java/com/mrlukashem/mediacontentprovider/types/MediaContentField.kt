@@ -1,6 +1,6 @@
 package com.mrlukashem.mediacontentprovider.types
 
-class MediaContentField(var fieldName: FieldName? = null, var fieldValue: String? = null) {
+data class MediaContentField(var fieldName: FieldName? = null, var fieldValue: String? = null) {
     enum class FieldName {
         // Fields for albums
         ALBUM,

@@ -6,8 +6,9 @@ import android.content.ContentProvider;
  * Created by MrLukashem on 27.11.2017.
  */
 
-public interface ContentProviderDataInfo {
+public interface ProviderTestDataController {
     int getTotalTracks();
     int getTotalAlbums();
     ContentProvider getProvider();
+    void reset();
 }

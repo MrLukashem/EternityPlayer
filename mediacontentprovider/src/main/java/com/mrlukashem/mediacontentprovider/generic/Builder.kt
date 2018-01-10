@@ -5,5 +5,4 @@ package com.mrlukashem.mediacontentprovider.generic
  */
 interface Builder<T> {
     fun build() : T
-    fun from(tBase: T) : Builder<T>
 }

@@ -13,21 +13,58 @@ import org.junit.Test
 class QueryViewBuilderTestsForKotlin {
     @Test
     fun queryViewBuilderCompare() {
-        val firstView = QueryView.build {
+        var firstView = QueryView.build {
             contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-            fieldsProjection = mutableListOf(
-                    MediaContentField.FieldName.DATA,
-                    MediaContentField.FieldName.ALBUM,
-                    MediaContentField.FieldName.TITLE)
+            fieldsProjection.add(MediaContentField.FieldName.DATA)
+            fieldsProjection.add(MediaContentField.FieldName.ALBUM)
+            fieldsProjection.add(MediaContentField.FieldName.TITLE)
         }
-        val secondView = QueryView.build {
+        var secondView = QueryView.build {
             contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-            fieldsProjection = mutableListOf(
-                    MediaContentField.FieldName.DATA,
-                    MediaContentField.FieldName.ALBUM,
-                    MediaContentField.FieldName.TITLE)
+            fieldsProjection.add(MediaContentField.FieldName.DATA)
+            fieldsProjection.add(MediaContentField.FieldName.ALBUM)
+            fieldsProjection.add(MediaContentField.FieldName.TITLE)
+        }
+        val thirdView = QueryView.build {
+            contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.PLAYLIST)
+            fieldsProjection.add(MediaContentField.FieldName.DATA)
+            fieldsProjection.add(MediaContentField.FieldName.ALBUM)
+            fieldsProjection.add(MediaContentField.FieldName.TITLE)
+        }
+        val fourthView = QueryView.from(thirdView).build()
+
+        Assert.assertTrue(firstView == secondView)
+        Assert.assertTrue(firstView != thirdView)
+        Assert.assertTrue(secondView != thirdView)
+        Assert.assertTrue(firstView.contentType == secondView.contentType)
+        Assert.assertTrue(firstView.fieldsProjection == secondView.fieldsProjection)
+        Assert.assertTrue(firstView.fieldsProjection == thirdView.fieldsProjection)
+        Assert.assertTrue(secondView.fieldsProjection == thirdView.fieldsProjection)
+        Assert.assertTrue(thirdView == fourthView)
+        Assert.assertFalse(thirdView == firstView)
+        Assert.assertFalse(thirdView == secondView)
+
+        val builder = QueryView.QueryViewBuilder().setContentType(
+                ContentType.MainType.VIDEO, ContentType.SubType.PLAYLIST).reset()
+        val emptyViewAfterReset = builder.reset().build()
+        val emptyViewByDefault = QueryView.build {}
+        Assert.assertTrue(emptyViewAfterReset == emptyViewByDefault)
+        Assert.assertTrue(emptyViewAfterReset.contentType == emptyViewByDefault.contentType)
+
+        firstView = QueryView.build {
+            selectionOptions.add(QueryView.SelectionOption(MediaContentField(
+                    MediaContentField.FieldName.ALBUM, "IronMaiden"),
+                    QueryView.SelectionOption.SelectionType.EQUALS_GREATER))
+            selectionOptions.add(QueryView.SelectionOption(MediaContentField(
+                    MediaContentField.FieldName.ALBUM, "IronMaiden"),
+                    QueryView.SelectionOption.SelectionType.EQUALS_GREATER))
         }
 
+        secondView = QueryView.build {
+           selectionOptions.add(QueryView.SelectionOption(MediaContentField(
+                   MediaContentField.FieldName.ALBUM, "IronMaiden"),
+                   QueryView.SelectionOption.SelectionType.EQUALS_GREATER))
+        }
         Assert.assertTrue(firstView == secondView)
     }
 }

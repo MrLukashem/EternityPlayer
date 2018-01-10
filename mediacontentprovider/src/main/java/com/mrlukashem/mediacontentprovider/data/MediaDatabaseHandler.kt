@@ -5,6 +5,7 @@ import android.net.Uri
 import android.provider.MediaStore
 
 import com.mrlukashem.mediacontentprovider.content.IMediaContentView
+import com.mrlukashem.mediacontentprovider.data.DataHandler.*
 import com.mrlukashem.mediacontentprovider.types.ContentType
 
 class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler {
@@ -19,19 +20,40 @@ class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler 
                   to MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
   )
 
-  override fun insert(data: List<IMediaContentView>) {
+  override fun insert(data: List<IMediaContentView>): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Template
   }
 
-  override fun update(oldData: List<IMediaContentView>, newData: List<IMediaContentView>) {
+  override fun insert(data: IMediaContentView): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun delete(data: List<IMediaContentView>) {
+  override fun update(updatedData: List<IMediaContentView>): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun delete(queryView: QueryView) {
+  override fun update(updatedData: IMediaContentView): ResultType {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  override fun delete(data: IMediaContentView): ResultType {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  override fun delete(data: List<IMediaContentView>): ResultType {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  override fun delete(
+          contentType: ContentType,
+          selectionOptions: List<QueryView.SelectionOption>): ResultType {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  override fun delete(
+          mainType: ContentType.MainType,
+          subType: ContentType.SubType,
+          selectionOptions: List<QueryView.SelectionOption>): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 

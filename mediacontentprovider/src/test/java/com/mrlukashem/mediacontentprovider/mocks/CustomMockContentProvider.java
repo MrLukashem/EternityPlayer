@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 
 @Mock
 public class CustomMockContentProvider
-        extends MockContentProvider implements ContentProviderDataInfo {
+        extends MockContentProvider implements ProviderTestDataController {
   private class DataSet {
     List<String> cols;
     List<ContentValues> rows;
@@ -62,6 +62,7 @@ public class CustomMockContentProvider
 
   // TODO: Temporary hard-coded. It should be loaded from a file.
   private void initDataSetKillers() {
+    dataSets.clear();
     String[] cols = new String[] {
             "ARTIST",
             "DATA",
@@ -164,5 +165,10 @@ public class CustomMockContentProvider
   @Override
   public ContentProvider getProvider() {
     return this;
+  }
+
+  @Override
+  public void reset() {
+    initContentValues();
   }
 }

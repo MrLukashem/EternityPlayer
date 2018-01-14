@@ -1,61 +1,63 @@
 package com.mrlukashem.mediacontentprovider.content
 
-import com.mrlukashem.mediacontentprovider.generic.Builder
+import com.mrlukashem.mediacontentprovider.generic.Buildable
 import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.MediaContentField
 
 data class MediaContentView internal constructor(
-        override val contentType: ContentType,
-        override var contentFields: MutableSet<MediaContentField>,
-        override val contentHandle: Int)
-    : IMediaContentView {
+        val contentType: ContentType,
+        val contentFields: MutableSet<MediaContentField>,
+        val contentHandle: Int) {
     constructor(contentType: ContentType, contentFields: MutableSet<MediaContentField>)
-    : this(contentType, contentFields, IMediaContentView.HANDLE_NOT_INITIALIZED)
+    : this(contentType, contentFields, HANDLE_NOT_INITIALIZED)
 
-    override fun getFieldValue(fieldName: MediaContentField.FieldName) : String {
+    fun getFieldValue(fieldName: MediaContentField.FieldName) : String {
         val fieldValue = contentFields.find {
             it.fieldName == fieldName
         }?.fieldValue
 
-        return fieldValue ?: ""
+        return fieldValue ?: throw NoSuchElementException(
+                "The ContentView does not contain ${fieldName.name} field")
     }
 
-    override fun isFieldPresent(fieldName: MediaContentField.FieldName) : Boolean {
+    fun isFieldPresent(fieldName: MediaContentField.FieldName) : Boolean {
         return contentFields.find {
             it.fieldName == fieldName
         } != null
     }
 
-    companion object ContentBuilder {
+    companion object BuilderFactory {
+        val HANDLE_NOT_INITIALIZED: Int = -1
+
         fun build(init: MediaContentViewBuilder.() -> Unit) = MediaContentViewBuilder(init).build()
-        fun from(contentBase: IMediaContentView) = MediaContentViewBuilder().from(contentBase)
+        fun from(contentBase: MediaContentView) = MediaContentViewBuilder().from(contentBase)
         fun create() = MediaContentViewBuilder()
     }
 
-    class MediaContentViewBuilder() : Builder<IMediaContentView> {
+    class MediaContentViewBuilder() : Buildable<MediaContentView, MediaContentViewBuilder> {
         var contentType: ContentType = ContentType()
         var contentFields: MutableSet<MediaContentField> = HashSet()
-        var contentHandle: Int = IMediaContentView.HANDLE_NOT_INITIALIZED
+        var contentHandle: Int = HANDLE_NOT_INITIALIZED
 
         constructor(init: MediaContentViewBuilder.() -> Unit): this() {
             init()
         }
 
-        override fun build(): IMediaContentView {
+        override fun build(): MediaContentView {
             return MediaContentView(contentType, contentFields, contentHandle)
         }
 
-        fun from(tBase: IMediaContentView): MediaContentViewBuilder {
+        override fun from(tBase: MediaContentView): MediaContentViewBuilder {
             return MediaContentViewBuilder().apply {
                 contentType = tBase.contentType
                 contentFields = tBase.contentFields
             }
         }
 
-        fun reset(): MediaContentViewBuilder {
+        override fun reset(): MediaContentViewBuilder {
             contentType = ContentType()
             contentFields.clear()
-            contentHandle = IMediaContentView.HANDLE_NOT_INITIALIZED
+            contentHandle = HANDLE_NOT_INITIALIZED
 
             return this
         }
@@ -64,7 +66,7 @@ data class MediaContentView internal constructor(
         * For Java users. Kotlin setter does not return this, it returns Unit (void).
         * @return this
         */
-        fun contentType(mainType: ContentType.MainType, subType: ContentType.SubType) = apply {
+        fun setType(mainType: ContentType.MainType, subType: ContentType.SubType) = apply {
             contentType = ContentType(mainType, subType)
         }
 
@@ -72,15 +74,7 @@ data class MediaContentView internal constructor(
         * For Java users. Kotlin setter does not return this, it returns Unit (void).
         * @return this
         */
-        fun contentType(newContentType: ContentType) = apply {
-            contentType = newContentType
-        }
-
-        /*
-        * For Java users. Kotlin setter does not return this, it returns Unit (void).
-        * @return this
-        */
-        fun contentFields(newContentFields: MutableSet<MediaContentField>) = apply {
+        fun setFields(newContentFields: MutableSet<MediaContentField>) = apply {
             contentFields = newContentFields
         }
 
@@ -88,7 +82,7 @@ data class MediaContentView internal constructor(
         * For Java users. Kotlin setter does not return this, it returns Unit (void).
         * @return this
         */
-        fun contentField(newContentField: MediaContentField) = apply {
+        fun setField(newContentField: MediaContentField) = apply {
             contentFields.add(newContentField)
         }
 
@@ -96,7 +90,7 @@ data class MediaContentView internal constructor(
         * For Java users. Kotlin setter does not return this, it returns Unit (void).
         * @return this
         */
-        fun contentField(fieldName: MediaContentField.FieldName, fieldValue: String) = apply {
+        fun setField(fieldName: MediaContentField.FieldName, fieldValue: String) = apply {
             contentFields.add(MediaContentField(fieldName, fieldValue))
         }
     }

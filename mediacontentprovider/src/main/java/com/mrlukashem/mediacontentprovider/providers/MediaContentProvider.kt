@@ -2,13 +2,13 @@ package com.mrlukashem.mediacontentprovider.providers
 
 import android.content.Context
 
-import com.mrlukashem.mediacontentprovider.content.IMediaContentView
+import com.mrlukashem.mediacontentprovider.content.MediaContentView
 import com.mrlukashem.mediacontentprovider.data.DataHandler
 import com.mrlukashem.mediacontentprovider.data.MediaDatabaseHandler
 import com.mrlukashem.mediacontentprovider.data.QueryView
 import com.mrlukashem.mediacontentprovider.types.ContentType
 
-class MediaContentProvider() : IMediaContentProvider {
+class MediaContentProvider() : ContentProvider {
   private var dataHandler: DataHandler? = null
 
   enum class Mode {
@@ -23,7 +23,7 @@ class MediaContentProvider() : IMediaContentProvider {
     }
   }
 
-  override fun getContentByKey(key: Int): IMediaContentView {
+  override fun getContentByKey(key: Int): MediaContentView {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
@@ -32,32 +32,32 @@ class MediaContentProvider() : IMediaContentProvider {
   }
 
   override fun getContent(wildCardWorlds: List<String>,
-                          resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                          resultCallback: ((List<MediaContentView>) -> Unit)?,
                           maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
   override fun getContent(contentType: ContentType,
-                          resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                          resultCallback: ((List<MediaContentView>) -> Unit)?,
                           maxCapacity: Int) {
     val content = dataHandler?.query(QueryView(contentType))
     resultCallback?.invoke(content ?: ArrayList())
   }
 
   override fun getContent(queryView: QueryView,
-                          resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                          resultCallback: ((List<MediaContentView>) -> Unit)?,
                           maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContentFromParent(contentParent: IMediaContentView,
-                                    resultCallback: ((List<IMediaContentView>) -> Unit)?,
+  override fun getContentFromParent(contentParent: MediaContentView,
+                                    resultCallback: ((List<MediaContentView>) -> Unit)?,
                                     maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
   override fun getContentFromParent(queryView: QueryView,
-                                    resultCallback: ((List<IMediaContentView>) -> Unit)?,
+                                    resultCallback: ((List<MediaContentView>) -> Unit)?,
                                     maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }

@@ -5,7 +5,7 @@ package com.mrlukashem.mediacontentprovider.utils;
  */
 
 public class Optional<T> {
-    T storedObject = null;
+    private T storedObject = null;
 
     public Optional(T storedObject) {
         this.storedObject = storedObject;

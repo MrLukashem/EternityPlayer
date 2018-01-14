@@ -2,7 +2,6 @@ package com.mrlukashem.mediacontentprovider;
 
 import android.test.mock.MockContentResolver;
 
-import com.mrlukashem.mediacontentprovider.content.IMediaContentView;
 import com.mrlukashem.mediacontentprovider.content.MediaContentView;
 import com.mrlukashem.mediacontentprovider.data.DataHandler.*;
 import com.mrlukashem.mediacontentprovider.data.MediaDatabaseHandler;
@@ -41,13 +40,13 @@ public class MediaDatabaseHandlerTests {
                 ContentType.MainType.AUDIO,
                 ContentType.SubType.TRACK,
                 FieldName.TITLE, FieldName.ALBUM);
-        List<IMediaContentView> tracks = handler.query(queryView);
+        List<MediaContentView> tracks = handler.query(queryView);
         Assert.assertTrue(tracks.size() == providerDataController.getTotalTracks());
     }
 
     @Test
     public void testSearch() {
-        List<IMediaContentView> tracks = handler.search(Collections.singletonList("Another Life"));
+        List<MediaContentView> tracks = handler.search(Collections.singletonList("Another Life"));
         Assert.assertFalse(tracks.isEmpty());
     }
 
@@ -70,7 +69,7 @@ public class MediaDatabaseHandlerTests {
                 ContentType.MainType.AUDIO,
                 ContentType.SubType.TRACK,
                 FieldName.TITLE, FieldName.ALBUM);
-        List<IMediaContentView> tracks = handler.query(queryView);
+        List<MediaContentView> tracks = handler.query(queryView);
         handler.delete(tracks);
         Assert.assertTrue(tracks.size() == providerDataController.getTotalTracks());
 
@@ -84,7 +83,7 @@ public class MediaDatabaseHandlerTests {
                 ContentType.MainType.AUDIO,
                 ContentType.SubType.TRACK,
                 FieldName.TITLE, FieldName.ALBUM);
-        List<IMediaContentView> allTracks = handler.query(queryView);
+        List<MediaContentView> allTracks = handler.query(queryView);
         Assert.assertTrue(allTracks.size() == providerDataController.getTotalTracks());
 
         queryView = QueryView.QueryBuilder.create()
@@ -96,12 +95,12 @@ public class MediaDatabaseHandlerTests {
                         "None",
                         SelectionOption.SelectionType.EQUALS))
                 .build();
-        List<IMediaContentView> tracksWithSelection = handler.query(queryView);
+        List<MediaContentView> tracksWithSelection = handler.query(queryView);
         Assert.assertTrue(tracksWithSelection.size() == 0);
 
-        IMediaContentView firstTrack = allTracks.get(0);
-        IMediaContentView updatedTrack = MediaContentView.ContentBuilder.from(firstTrack)
-                .contentField(FieldName.TITLE, "None").build();
+        MediaContentView firstTrack = allTracks.get(0);
+        MediaContentView updatedTrack = MediaContentView.BuilderFactory.from(firstTrack)
+                .setField(FieldName.TITLE, "None").build();
         ResultType result = handler.update(updatedTrack);
         Assert.assertTrue(result.equals(ResultType.SUCCESS));
 

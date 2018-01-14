@@ -13,14 +13,14 @@ import java.util.ArrayList;
  */
 
 public class Stream<T> {
-    private List<T> tObjects;
+    private StreamList<T> tObjects;
 
-    public Stream(@NotNull List<T> tObjects) {
+    public Stream(@NotNull StreamList<T> tObjects) {
         this.tObjects = tObjects;
     }
 
     public Stream<T> filter(Predicate<? super T> predicate) {
-        List<T> tResObjects = new StreamArrayList<>(tObjects.size());
+        StreamList<T> tResObjects = new ArrayStreamList<>(tObjects.size());
         for (T tItem : tObjects) {
             if (predicate.apply(tItem)) {
                 tResObjects.add(tItem);
@@ -40,7 +40,7 @@ public class Stream<T> {
     }
 
     public <R> Stream<R> map(@NotNull Function<T, R> mapper) {
-        List<R> rObjects = new StreamArrayList<>();
+        StreamList<R> rObjects = new ArrayStreamList<>();
         for (T tItem : tObjects) {
             rObjects.add(mapper.invoke(tItem));
         }
@@ -55,7 +55,7 @@ public class Stream<T> {
     // TODO: Temporary it should does not work correctly because we should not modify object in tObject list.
     /*public Optional<T> reduce(@NonNull BiAccumulator<T> op) {
         // TODO: Temporary. We should not copy below list.
-        List<T> tempTObjects = new StreamArrayList<>(tObjects.size());
+        StreamList<T> tempTObjects = new ArrayStreamList<>(tObjects.size());
         Collections.copy(tempTObjects, tObjects);
         Optional<T> tResult = tempTObjects.size() > 0 ?
                 new Optional<>(tempTObjects.get(0)) : new Optional<>();
@@ -77,9 +77,9 @@ public class Stream<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> collect() {
+    public StreamList<T> collect() {
         ArrayList<T> arrayListView = (ArrayList<T>)(tObjects);
-        return new StreamArrayList<>((List<T>)arrayListView.clone());
+        return new ArrayStreamList<>((StreamList<T>)arrayListView.clone());
     }
 
     private boolean matchBase(@NotNull Predicate<T> predicate, boolean returnValue) {
@@ -93,17 +93,17 @@ public class Stream<T> {
     }
 
     private Stream<T> forEachBase(
-            @NotNull Consumer<? super T> consumer, @NotNull List<T> workList) {
-        for (T tItem : workList) {
+            @NotNull Consumer<? super T> consumer, @NotNull StreamList<T> workStreamList) {
+        for (T tItem : workStreamList) {
             consumer.accept(tItem);
         }
 
-        return new Stream<>(workList);
+        return new Stream<>(workStreamList);
     }
 
-    private T reduce(@NonNull T initValue, @NonNull List<T> tList, @NonNull BiAccumulator<T> op) {
+    private T reduce(@NonNull T initValue, @NonNull StreamList<T> tStreamList, @NonNull BiAccumulator<T> op) {
         T tResult = initValue;
-        for (T tItem: tList) {
+        for (T tItem: tStreamList) {
             tResult = op.invoke(tResult, tItem);
         }
 

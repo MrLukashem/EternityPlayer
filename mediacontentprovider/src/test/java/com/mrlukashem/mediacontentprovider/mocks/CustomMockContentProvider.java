@@ -7,9 +7,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.test.mock.MockContentProvider;
 
-import com.mrlukashem.mediacontentprovider.utils.List;
+import com.mrlukashem.mediacontentprovider.utils.ArrayStreamList;
+import com.mrlukashem.mediacontentprovider.utils.StreamList;
 import com.mrlukashem.mediacontentprovider.utils.Optional;
-import com.mrlukashem.mediacontentprovider.utils.StreamArrayList;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,10 +21,10 @@ import java.util.function.Predicate;
 public class CustomMockContentProvider
         extends MockContentProvider implements ProviderTestDataController {
   private class DataSet {
-    List<String> cols;
-    List<ContentValues> rows;
+    StreamList<String> cols;
+    StreamList<ContentValues> rows;
 
-    DataSet(@NonNull List<String> cols, @NonNull List<ContentValues> rows) {
+    DataSet(@NonNull StreamList<String> cols, @NonNull StreamList<ContentValues> rows) {
       this.cols = cols;
       this.rows = rows;
     }
@@ -57,7 +57,7 @@ public class CustomMockContentProvider
     }
   }
 
-  private List<DataSet> dataSets = new StreamArrayList<>();
+  private StreamList<DataSet> dataSets = new ArrayStreamList<>();
   private Cursor currentCursor;
 
   // TODO: Temporary hard-coded. It should be loaded from a file.
@@ -71,7 +71,7 @@ public class CustomMockContentProvider
             "MIME_TYPE",
             "SIZE",
     };
-    List<ContentValues> rows = new StreamArrayList<>();
+    StreamList<ContentValues> rows = new ArrayStreamList<>();
     ContentValues tempContentValues = new ContentValues();
 
     tempContentValues.put("ARTIST", "Iron Maiden");
@@ -101,7 +101,7 @@ public class CustomMockContentProvider
     rows.add(tempContentValues);
 
     dataSets.add(new DataSet(
-            new StreamArrayList<>(Arrays.asList(cols)),
+            new ArrayStreamList<>(Arrays.asList(cols)),
             rows));
   }
 
@@ -126,7 +126,7 @@ public class CustomMockContentProvider
       final SelectionPredicateFactory predicateFactory = new SelectionPredicateFactory();
       final Map<String, Predicate<String>> predicates =
               predicateFactory.createPredicates(selection, selectionArgs);
-      List<ContentValues> rowsAfterSelection = new StreamArrayList<>();
+      StreamList<ContentValues> rowsAfterSelection = new ArrayStreamList<>();
 
       Function<ContentValues, Boolean> isValidWithSelection = (contentValues) -> {
         boolean isValid = true;

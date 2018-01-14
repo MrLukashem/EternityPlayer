@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.provider.MediaStore
 
-import com.mrlukashem.mediacontentprovider.content.IMediaContentView
+import com.mrlukashem.mediacontentprovider.content.MediaContentView
 import com.mrlukashem.mediacontentprovider.data.DataHandler.*
 import com.mrlukashem.mediacontentprovider.types.ContentType
 
@@ -20,27 +20,27 @@ class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler 
                   to MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
   )
 
-  override fun insert(data: List<IMediaContentView>): ResultType {
+  override fun insert(data: List<MediaContentView>): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Template
   }
 
-  override fun insert(data: IMediaContentView): ResultType {
+  override fun insert(data: MediaContentView): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun update(updatedData: List<IMediaContentView>): ResultType {
+  override fun update(updatedData: List<MediaContentView>): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun update(updatedData: IMediaContentView): ResultType {
+  override fun update(updatedData: MediaContentView): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun delete(data: IMediaContentView): ResultType {
+  override fun delete(data: MediaContentView): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun delete(data: List<IMediaContentView>): ResultType {
+  override fun delete(data: List<MediaContentView>): ResultType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
@@ -57,12 +57,12 @@ class MediaDatabaseHandler(val resolver: ContentResolver? = null) : DataHandler 
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun query(queryView: QueryView): List<IMediaContentView> {
+  override fun query(queryView: QueryView): List<MediaContentView> {
     val sourceTableUri = sourceTableUriFactory[queryView.contentType.toString()]
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun search(wildCardWorlds: List<String>): List<IMediaContentView> {
+  override fun search(wildCardWorlds: List<String>): List<MediaContentView> {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 }

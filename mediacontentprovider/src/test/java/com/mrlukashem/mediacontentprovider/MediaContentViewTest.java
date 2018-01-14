@@ -1,7 +1,5 @@
 package com.mrlukashem.mediacontentprovider;
 
-import com.mrlukashem.mediacontentprovider.content.IMediaContentView;
-
 import com.mrlukashem.mediacontentprovider.content.MediaContentView;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
 import com.mrlukashem.mediacontentprovider.types.MediaContentField;
@@ -14,33 +12,33 @@ public class MediaContentViewTest {
   private String artistName = "Iron Maiden";
   private String titleName = "Speed of Light";
 
-  private IMediaContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
-          .contentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-          .contentField(MediaContentField.FieldName.ALBUM, albumName)
-          .contentField(MediaContentField.FieldName.ARTIST, artistName)
-          .contentField(MediaContentField.FieldName.TITLE, titleName)
+  private MediaContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
+          .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+          .setField(MediaContentField.FieldName.ALBUM, albumName)
+          .setField(MediaContentField.FieldName.ARTIST, artistName)
+          .setField(MediaContentField.FieldName.TITLE, titleName)
           .build();
-  private IMediaContentView secondContentDesc = new MediaContentView.MediaContentViewBuilder()
-          .contentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-          .contentField(MediaContentField.FieldName.ALBUM, albumName)
-          .contentField(MediaContentField.FieldName.ARTIST, artistName)
-          .contentField(MediaContentField.FieldName.TITLE, titleName)
+  private MediaContentView secondContentDesc = new MediaContentView.MediaContentViewBuilder()
+          .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+          .setField(MediaContentField.FieldName.ALBUM, albumName)
+          .setField(MediaContentField.FieldName.ARTIST, artistName)
+          .setField(MediaContentField.FieldName.TITLE, titleName)
           .build();
 
-  private IMediaContentView thirdContentDesc = new MediaContentView.MediaContentViewBuilder()
-          .contentType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM)
-          .contentField(MediaContentField.FieldName.ALBUM, albumName)
-          .contentField(MediaContentField.FieldName.ARTIST, artistName)
-          .contentField(MediaContentField.FieldName.TITLE, titleName)
+  private MediaContentView thirdContentDesc = new MediaContentView.MediaContentViewBuilder()
+          .setType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM)
+          .setField(MediaContentField.FieldName.ALBUM, albumName)
+          .setField(MediaContentField.FieldName.ARTIST, artistName)
+          .setField(MediaContentField.FieldName.TITLE, titleName)
           .build();
 
   @Test
   public void getFieldTest() {
-    IMediaContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
-            .contentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-            .contentField(MediaContentField.FieldName.ALBUM, albumName)
-            .contentField(MediaContentField.FieldName.ARTIST, artistName)
-            .contentField(MediaContentField.FieldName.TITLE, titleName)
+    MediaContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
+            .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+            .setField(MediaContentField.FieldName.ALBUM, albumName)
+            .setField(MediaContentField.FieldName.ARTIST, artistName)
+            .setField(MediaContentField.FieldName.TITLE, titleName)
             .build();
 
     Assert.assertTrue(

@@ -1,6 +1,6 @@
 package com.mrlukashem.mediacontentprovider.data
 
-import com.mrlukashem.mediacontentprovider.generic.Builder
+import com.mrlukashem.mediacontentprovider.generic.Buildable
 import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.MediaContentField
 
@@ -43,7 +43,7 @@ data class QueryView(val contentType: ContentType,
     fun create() = QueryViewBuilder()
   }
 
-  class QueryViewBuilder() : Builder<QueryView> {
+  class QueryViewBuilder() : Buildable<QueryView, QueryViewBuilder> {
     var contentType: ContentType = ContentType()
     var sortOption: SortOption? = null
     var selectionOptions: MutableSet<SelectionOption> = HashSet()
@@ -57,7 +57,7 @@ data class QueryView(val contentType: ContentType,
       return QueryView(contentType, fieldsProjection, selectionOptions, sortOption);
     }
 
-    fun from(tBase: QueryView): QueryViewBuilder {
+    override fun from(tBase: QueryView): QueryViewBuilder {
       contentType = tBase.contentType
       sortOption = tBase.sortOption
       selectionOptions = tBase.selectionOptions.toMutableSet()
@@ -66,7 +66,7 @@ data class QueryView(val contentType: ContentType,
       return this
     }
 
-    fun reset(): QueryViewBuilder {
+    override fun reset(): QueryViewBuilder {
       contentType = ContentType()
       sortOption = null
       selectionOptions.clear()

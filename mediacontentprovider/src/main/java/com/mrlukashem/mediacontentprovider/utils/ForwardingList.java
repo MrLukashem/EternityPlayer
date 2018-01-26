@@ -138,4 +138,14 @@ abstract class ForwardingList<T> implements List<T> {
     public List<T> subList(int i, int i1) {
         return base.subList(i, i1);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof List && base.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return 37 * base.hashCode();
+    }
 }

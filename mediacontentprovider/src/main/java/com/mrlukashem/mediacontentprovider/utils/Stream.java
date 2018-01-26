@@ -6,8 +6,6 @@ import com.android.internal.util.Predicate;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
 /**
  * Created by lmerta on 2017-11-15.
  */
@@ -78,8 +76,7 @@ public class Stream<T> {
 
     @SuppressWarnings("unchecked")
     public StreamList<T> collect() {
-        ArrayList<T> arrayListView = (ArrayList<T>)(tObjects);
-        return new ArrayStreamList<>((StreamList<T>)arrayListView.clone());
+        return new ArrayStreamList(tObjects);
     }
 
     private boolean matchBase(@NotNull Predicate<T> predicate, boolean returnValue) {

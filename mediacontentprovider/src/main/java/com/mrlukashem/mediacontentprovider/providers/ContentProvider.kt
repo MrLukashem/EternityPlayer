@@ -1,13 +1,13 @@
 package com.mrlukashem.mediacontentprovider.providers
 
-import com.mrlukashem.mediacontentprovider.content.MediaContentView
+import com.mrlukashem.mediacontentprovider.content.ContentView
 import com.mrlukashem.mediacontentprovider.data.QueryView
 import com.mrlukashem.mediacontentprovider.types.ContentType
 
-typealias ResultCallback = (List<MediaContentView>) -> Unit
+typealias ResultCallback = (List<ContentView>) -> Unit
 
 interface ContentProvider {
-  fun getContentByKey(key: Int): MediaContentView
+  fun getContentByKey(key: Int): ContentView
   fun getType(): ContentType
   fun getContent(contentType: ContentType, resultCallback: ResultCallback? = null,
                  maxCapacity: Int = -1)
@@ -15,7 +15,7 @@ interface ContentProvider {
                  maxCapacity: Int = -1)
   fun getContent(wildCardWorlds: List<String>, resultCallback: ResultCallback? = null,
                  maxCapacity: Int = -1)
-  fun getContentFromParent(contentParent: MediaContentView, resultCallback: ResultCallback? = null,
+  fun getContentFromParent(contentParent: ContentView, resultCallback: ResultCallback? = null,
                            maxCapacity: Int = -1)
   fun getContentFromParent(queryView: QueryView, resultCallback: ResultCallback? = null,
                            maxCapacity: Int = -1)

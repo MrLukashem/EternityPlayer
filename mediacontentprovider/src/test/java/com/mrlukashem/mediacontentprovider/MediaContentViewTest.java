@@ -1,8 +1,9 @@
 package com.mrlukashem.mediacontentprovider;
 
+import com.mrlukashem.mediacontentprovider.content.ContentView;
 import com.mrlukashem.mediacontentprovider.content.MediaContentView;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
-import com.mrlukashem.mediacontentprovider.types.MediaContentField;
+import com.mrlukashem.mediacontentprovider.types.ContentField;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,44 +13,44 @@ public class MediaContentViewTest {
   private String artistName = "Iron Maiden";
   private String titleName = "Speed of Light";
 
-  private MediaContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
+  private ContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
           .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-          .setField(MediaContentField.FieldName.ALBUM, albumName)
-          .setField(MediaContentField.FieldName.ARTIST, artistName)
-          .setField(MediaContentField.FieldName.TITLE, titleName)
+          .setField(ContentField.FieldName.ALBUM, albumName)
+          .setField(ContentField.FieldName.ARTIST, artistName)
+          .setField(ContentField.FieldName.TITLE, titleName)
           .build();
-  private MediaContentView secondContentDesc = new MediaContentView.MediaContentViewBuilder()
+  private ContentView secondContentDesc = new MediaContentView.MediaContentViewBuilder()
           .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-          .setField(MediaContentField.FieldName.ALBUM, albumName)
-          .setField(MediaContentField.FieldName.ARTIST, artistName)
-          .setField(MediaContentField.FieldName.TITLE, titleName)
+          .setField(ContentField.FieldName.ALBUM, albumName)
+          .setField(ContentField.FieldName.ARTIST, artistName)
+          .setField(ContentField.FieldName.TITLE, titleName)
           .build();
 
-  private MediaContentView thirdContentDesc = new MediaContentView.MediaContentViewBuilder()
+  private ContentView thirdContentDesc = new MediaContentView.MediaContentViewBuilder()
           .setType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM)
-          .setField(MediaContentField.FieldName.ALBUM, albumName)
-          .setField(MediaContentField.FieldName.ARTIST, artistName)
-          .setField(MediaContentField.FieldName.TITLE, titleName)
+          .setField(ContentField.FieldName.ALBUM, albumName)
+          .setField(ContentField.FieldName.ARTIST, artistName)
+          .setField(ContentField.FieldName.TITLE, titleName)
           .build();
 
   @Test
   public void getFieldTest() {
-    MediaContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
+      ContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
             .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-            .setField(MediaContentField.FieldName.ALBUM, albumName)
-            .setField(MediaContentField.FieldName.ARTIST, artistName)
-            .setField(MediaContentField.FieldName.TITLE, titleName)
+            .setField(ContentField.FieldName.ALBUM, albumName)
+            .setField(ContentField.FieldName.ARTIST, artistName)
+            .setField(ContentField.FieldName.TITLE, titleName)
             .build();
 
     Assert.assertTrue(
-            firstContentDesc.getFieldValue(MediaContentField.FieldName.ALBUM).equals(albumName));
+            firstContentDesc.get(ContentField.FieldName.ALBUM).equals(albumName));
     Assert.assertTrue(
-            firstContentDesc.getFieldValue(MediaContentField.FieldName.ARTIST).equals(artistName));
+            firstContentDesc.get(ContentField.FieldName.ARTIST).equals(artistName));
     Assert.assertTrue(
-            firstContentDesc.getFieldValue(MediaContentField.FieldName.TITLE).equals(titleName));
+            firstContentDesc.get(ContentField.FieldName.TITLE).equals(titleName));
     Assert.assertFalse(
-            firstContentDesc.getFieldValue(MediaContentField.FieldName.ARTIST).equals(albumName));
+            firstContentDesc.get(ContentField.FieldName.ARTIST).equals(albumName));
     Assert.assertFalse(
-            firstContentDesc.getFieldValue(MediaContentField.FieldName.ARTIST).equals(titleName));
+            firstContentDesc.get(ContentField.FieldName.ARTIST).equals(titleName));
   }
 }

@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Collections;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
@@ -64,12 +65,12 @@ public class MediaDatabaseHandlerTests {
                 view.getContentFields().size() == PROJECTION_SIZE_WITH_HANDLE_Q2));
     }
 
- /*   @Test
-    public void testSearch() {
-        List<ContentView> tracks = handler.search(Collections.singletonList("Another Life"));
-        Assert.assertFalse(tracks.isEmpty());
-    }
-
+//    @Test
+//    public void testSearch() {
+//        List<ContentView> tracks = handler.search(Collections.singletonList("Another Life"));
+//        Assert.assertFalse(tracks.isEmpty());
+//    }
+/*
     @Test
     public void testDelete() {
         List<QueryView.SelectionOption> options = Collections.singletonList(

@@ -14,17 +14,17 @@ import com.mrlukashem.mediacontentprovider.types.ContentType
 
 import kotlin.collections.HashSet
 
-class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler {
-    private val fancySearchProjection = listOf(FieldName.MIME_TYPE, FieldName.ARTIST,
-            FieldName.ALBUM, FieldName.ALBUM_ID, FieldName.TITLE, FieldName.DURATION, FieldName.ID)
+typealias HandleGenerator = (Cursor) -> String
 
+class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler {
     override fun query(queryView: QueryView): ContentViews {
         val extractor = QueryExtractor(queryView)
         return if (extractor.tableUri != null) doQuery(extractor) else emptyList()
     }
 
     private fun doQuery(extractor: QueryExtractor): ContentViews {
-        val vanillaHandleField = extractor.extendsProjectionWithHandleField()
+        extractor.extendsProjectionWithHandle()
+        val generator = chooseHandleGenerateStrategy(extractor.tableUri)
         val cursor: Cursor? = resolver.query(
                 extractor.tableUri,
                 extractor.vanillaProjection,
@@ -32,29 +32,44 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
                 extractor.vanillaSelectionArgs,
                 extractor.vanillaSortOrder)
 
-        return buildContentViews(extractor, cursor, vanillaHandleField)
+        return buildContentViews(extractor.type, cursor, generator)
     }
 
-    private fun QueryExtractor.extendsProjectionWithHandleField(): String {
-        val vanillaHandleField = convertUriToHandleBase(tableUri)
+    private fun QueryExtractor.extendsProjectionWithHandle() {
+        val vanillaHandleField = convertUriToHandleFieldName(tableUri)
         if (vanillaHandleField.isNotEmpty()) {
             vanillaProjection = vanillaProjection.toMutableSet().apply {
                 add(vanillaHandleField)
             }.toTypedArray()
         }
-
-        return vanillaHandleField
     }
 
-    private fun convertUriToHandleBase(uri: Uri?) = when (uri) {
-        MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Albums.ALBUM_ID
-        MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Artists.ARTIST_KEY
+    private fun fetchHandleBase(handleFields: Array<String>, cursor: Cursor): String? {
+        var handleBase = ""
+        var fieldsCaught = 0
+        if (!cursor.isClosed) {
+            handleFields.forEach {
+                val idx = cursor.getColumnIndex(it)
+                if (idx != -1) {
+                    handleBase += cursor.getString(idx)
+                    fieldsCaught++
+                }
+            }
+        }
+
+        return if (fieldsCaught == handleFields.size) handleBase else null
+    }
+
+    private fun convertUriToHandleFieldName(uri: Uri?) = when (uri) {
+        MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Albums.ALBUM
+        MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Artists.ARTIST
         MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Playlists.DATA
         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Media.DATA
         else -> ""
     }
 
-    private fun buildContentViews(extractor: QueryExtractor, cursor: Cursor?, handleField: String)
+    private fun buildContentViews(type: ContentType, cursor: Cursor?,
+                                  handleGenerator: HandleGenerator)
             : ContentViews {
         val result: MutableList<ContentView> = ArrayList()
         cursor?.use {
@@ -62,13 +77,13 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
                 val row: MutableSet<ContentField> = HashSet()
                 (0 until cursor.columnCount).asSequence()
                         .mapNotNullTo(row) {
-                            val field = FieldsConverter.fromVanillaField[cursor.getColumnName(it)]
+                            val field = Converter.fromVanillaField[cursor.getColumnName(it)]
                             if (field != null) ContentField(field,
                                     cursor.getString(it)) else null
                         }
                 result.add(MediaContentView.build {
-                    contentHandle = generateHandle(handleField, cursor)
-                    contentType = extractor.type
+                    metaData[Constants.HANDLE_KEY_NAME] = handleGenerator(cursor)
+                    contentType = type
                     contentFields = row
                 })
             }
@@ -77,22 +92,49 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         return result
     }
 
-    private fun generateHandle(handleField: String, cursor: Cursor): Int {
-        var handleBase = ""
-        if (!cursor.isClosed) {
-            val idx = cursor.getColumnIndex(handleField)
-            if (idx != -1) {
-                handleBase = cursor.getString(idx)
-            }
+    override fun search(wildCardWorldWithUri: WildCardUriPair): ContentViews {
+        val (uri, wildCard) = wildCardWorldWithUri
+        val type = Converter.fromUri[uri]
+        if (wildCard.isBlank() || type == null) {
+            return emptyList()
         }
 
-        return if (handleBase.isNotEmpty())
-            handleBase.hashCode() else MediaContentView.HANDLE_NOT_INITIALIZED
+        val fancySearchUri = Uri.withAppendedPath(uri, createFancySearchSegment(wildCard))
+        val generator = chooseHandleGenerateStrategy(uri)
+        return doSearch(type, fancySearchUri, generator)
     }
 
-    override fun search(wildCardWorlds: List<String>): ContentViews {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        //
+    private fun createFancySearchSegment(wildCard: String) = buildString {
+        append(Constants.SEARCH_FANCY)
+        append(wildCard)
+    }
+
+    private fun doSearch(type: ContentType, searchUri: Uri, generator: HandleGenerator):
+            ContentViews {
+        val cursor = resolver.query(
+                searchUri, null, null, null, null)
+        return buildContentViews(type, cursor, generator)
+    }
+
+    private fun chooseHandleGenerateStrategy(uri: Uri?): HandleGenerator {
+        val baseField = convertUriToHandleFieldName(uri)
+        when (baseField) {
+            MediaStore.Audio.Albums.ALBUM,
+            MediaStore.Audio.Artists.ARTIST -> {
+                return { cursor ->
+                    MediaStore.Audio.keyFor(fetchHandleBase(arrayOf(baseField), cursor))
+                }
+            }
+            MediaStore.Audio.Playlists.DATA -> {
+                return { cursor ->
+                    fetchHandleBase(arrayOf(baseField), cursor)?.hashCode()?.toString()
+                        ?: Constants.EMPTY_HANDLE_KEY
+                }
+            }
+            else -> {
+                return { _ ->  Constants.EMPTY_HANDLE_KEY }
+            }
+        }
     }
 
     override fun insert(data: ContentViews): ResultType {
@@ -113,7 +155,13 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private object FieldsConverter {
+    private object Constants {
+        const val EMPTY_HANDLE_KEY = ""
+        const val HANDLE_KEY_NAME = "handleKey"
+        const val SEARCH_FANCY = "search/fancy/"
+    }
+
+    private object Converter {
         internal val toVanillaField = hashMapOf(
                 FieldName.DATA to MediaStore.Audio.Media.DATA,
                 FieldName.ALBUM to MediaStore.Audio.Albums.ALBUM,
@@ -135,7 +183,19 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
                 FieldName.ID to MediaStore.MediaColumns._ID
         )
 
+        val toUri: Map<ContentType, Uri> = hashMapOf(
+                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM)
+                        to MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ARTIST)
+                        to MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
+                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.PLAYLIST)
+                        to MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+                        to MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        )
+
         internal val fromVanillaField = toVanillaField.entries.associateBy({it.value}, {it.key})
+        internal val fromUri = toUri.entries.associateBy({it.value}, {it.key})
     }
 
     private inner class QueryExtractor(queryView: QueryView) {
@@ -152,16 +212,7 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         var tableUri: Uri? = null
             private set
 
-        val uriFactory: Map<String, Uri> = hashMapOf(
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM).toString()
-                        to MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ARTIST).toString()
-                        to MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.PLAYLIST).toString()
-                        to MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK).toString()
-                        to MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        )
+
 
         init {
             initializeWith(queryView)
@@ -169,10 +220,10 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
 
         fun initializeWith(queryView: QueryView) {
             vanillaProjection = queryView.fieldsProjection.mapNotNull {
-                FieldsConverter.toVanillaField[it]
+                Converter.toVanillaField[it]
             }.toTypedArray()
             type = queryView.contentType
-            tableUri = uriFactory[queryView.contentType.toString()]
+            tableUri = Converter.toUri[queryView.contentType]
         }
     }
 }

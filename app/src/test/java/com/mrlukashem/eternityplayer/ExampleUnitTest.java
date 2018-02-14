@@ -1,6 +1,14 @@
 package com.mrlukashem.eternityplayer;
 
+import com.mrlukashem.mediacontentprovider.content.ContentView;
+import com.mrlukashem.mediacontentprovider.content.MediaContentView;
+import com.mrlukashem.mediacontentprovider.types.ContentField;
+import com.mrlukashem.mediacontentprovider.types.ContentType;
+
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 

@@ -14,20 +14,20 @@ public class MediaContentViewTest {
   private String titleName = "Speed of Light";
 
   private ContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
-          .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+          .setType(ContentType.TRACK)
           .setField(ContentField.FieldName.ALBUM, albumName)
           .setField(ContentField.FieldName.ARTIST, artistName)
           .setField(ContentField.FieldName.TITLE, titleName)
           .build();
   private ContentView secondContentDesc = new MediaContentView.MediaContentViewBuilder()
-          .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+          .setType(ContentType.TRACK)
           .setField(ContentField.FieldName.ALBUM, albumName)
           .setField(ContentField.FieldName.ARTIST, artistName)
           .setField(ContentField.FieldName.TITLE, titleName)
           .build();
 
   private ContentView thirdContentDesc = new MediaContentView.MediaContentViewBuilder()
-          .setType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM)
+          .setType(ContentType.ALBUM)
           .setField(ContentField.FieldName.ALBUM, albumName)
           .setField(ContentField.FieldName.ARTIST, artistName)
           .setField(ContentField.FieldName.TITLE, titleName)
@@ -36,7 +36,7 @@ public class MediaContentViewTest {
   @Test
   public void getFieldTest() {
       ContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
-            .setType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+            .setType(ContentType.TRACK)
             .setField(ContentField.FieldName.ALBUM, albumName)
             .setField(ContentField.FieldName.ARTIST, artistName)
             .setField(ContentField.FieldName.TITLE, titleName)

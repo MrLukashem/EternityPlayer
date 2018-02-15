@@ -15,18 +15,17 @@ public class QueryViewBuilderTestsForJava {
     @Test
     public void queryViewBuilderCompare() {
         QueryView firstView = new QueryView.QueryViewBuilder()
-                .setContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+                .setType(ContentType.TRACK)
                 .setFieldProjection(ContentField.FieldName.DATA)
                 .setFieldProjection(ContentField.FieldName.ALBUM)
                 .setFieldProjection(ContentField.FieldName.TITLE).build();
         QueryView secondView = new QueryView.QueryViewBuilder()
-                .setContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+                .setType(ContentType.TRACK)
                 .setFieldProjection(ContentField.FieldName.DATA)
                 .setFieldProjection(ContentField.FieldName.ALBUM)
                 .setFieldProjection(ContentField.FieldName.TITLE).build();
         QueryView thirdView = new QueryView.QueryViewBuilder()
-                .setContentType(
-                        ContentType.MainType.AUDIO, ContentType.SubType.PLAYLIST)
+                .setType(ContentType.PLAYLIST)
                 .setFieldProjection(ContentField.FieldName.DATA)
                 .setFieldProjection(ContentField.FieldName.ALBUM)
                 .setFieldProjection(ContentField.FieldName.TITLE).build();
@@ -43,8 +42,8 @@ public class QueryViewBuilderTestsForJava {
         Assert.assertFalse(thirdView.equals(firstView));
         Assert.assertFalse(thirdView.equals(secondView));
 
-        QueryView.QueryViewBuilder builder = new QueryView.QueryViewBuilder().setContentType(
-                ContentType.MainType.VIDEO, ContentType.SubType.PLAYLIST).reset();
+        QueryView.QueryViewBuilder builder = new QueryView.QueryViewBuilder().setType(
+                ContentType.PLAYLIST).reset();
         QueryView emptyViewAfterReset = builder.reset().build();
         QueryView emptyViewByDefault = new QueryView.QueryViewBuilder().build();
         Assert.assertTrue(emptyViewAfterReset.equals(emptyViewByDefault));

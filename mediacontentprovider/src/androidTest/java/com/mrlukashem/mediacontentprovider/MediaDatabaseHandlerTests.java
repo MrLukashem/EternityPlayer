@@ -19,7 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Collections;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
@@ -45,10 +44,7 @@ public class MediaDatabaseHandlerTests {
     public void testQuery() {
         final int PROJECTION_SIZE_WITH_HANDLE_Q1 = 3;
         final int PROJECTION_SIZE_WITH_HANDLE_Q2 = 4;
-        QueryView queryView = new QueryView(
-                ContentType.MainType.AUDIO,
-                ContentType.SubType.TRACK,
-                FieldName.TITLE, FieldName.ALBUM);
+        QueryView queryView = new QueryView(ContentType.TRACK, FieldName.TITLE, FieldName.ALBUM);
         List<ContentView> tracks = handler.query(queryView);
         Assert.assertTrue(tracks.size() == providerDataController.getTotalTracks());
         tracks.forEach(view -> Assert.assertTrue(
@@ -56,20 +52,18 @@ public class MediaDatabaseHandlerTests {
         providerDataController.reset();
 
         queryView = new QueryView(
-                ContentType.MainType.AUDIO,
-                ContentType.SubType.TRACK,
-                FieldName.TITLE, FieldName.ALBUM, FieldName.ARTIST);
+                ContentType.TRACK, FieldName.TITLE, FieldName.ALBUM, FieldName.ARTIST);
         tracks = handler.query(queryView);
         Assert.assertTrue(tracks.size() == providerDataController.getTotalTracks());
         tracks.forEach(view -> Assert.assertTrue(
                 view.getContentFields().size() == PROJECTION_SIZE_WITH_HANDLE_Q2));
     }
 
-//    @Test
-//    public void testSearch() {
-//        List<ContentView> tracks = handler.search(Collections.singletonList("Another Life"));
-//        Assert.assertFalse(tracks.isEmpty());
-//    }
+   /* @Test
+    public void testSearch() {
+        List<ContentView> tracks = handler.search();
+        Assert.assertFalse(tracks.isEmpty());
+    }*/
 /*
     @Test
     public void testDelete() {

@@ -43,7 +43,7 @@ class MediaContentView internal constructor(
     }
 
     class MediaContentViewBuilder() : Buildable<ContentView, MediaContentViewBuilder> {
-        var contentType: ContentType = ContentType()
+        var contentType: ContentType = ContentType.TRACK
         var contentFields: MutableSet<ContentField> = HashSet()
         var metaData: MutableMap<String, String> = HashMap()
 
@@ -63,7 +63,7 @@ class MediaContentView internal constructor(
         }
 
         override fun reset(): MediaContentViewBuilder {
-            contentType = ContentType()
+            contentType = ContentType.TRACK
             contentFields.clear()
             metaData.clear()
 
@@ -74,8 +74,8 @@ class MediaContentView internal constructor(
         * For Java users. Kotlin setter does not return this, it returns Unit (void).
         * @return this
         */
-        fun setType(mainType: ContentType.MainType, subType: ContentType.SubType) = apply {
-            contentType = ContentType(mainType, subType)
+        fun setType(type: ContentType) = apply {
+            contentType = type
         }
 
         /*

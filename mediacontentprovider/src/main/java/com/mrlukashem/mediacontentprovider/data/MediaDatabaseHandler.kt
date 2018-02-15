@@ -92,10 +92,10 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         return result
     }
 
-    override fun search(wildCardWorldWithUri: WildCardUriPair): ContentViews {
-        val (uri, wildCard) = wildCardWorldWithUri
-        val type = Converter.fromUri[uri]
-        if (wildCard.isBlank() || type == null) {
+    override fun search(wildCardWorldWithType: WildCardUriPair): ContentViews {
+        val (type, wildCard) = wildCardWorldWithType
+        val uri = Converter.toUri[type]
+        if (wildCard.isBlank() && uri != null) {
             return emptyList()
         }
 
@@ -148,10 +148,7 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun delete(
-            mainType: ContentType.MainType,
-            subType: ContentType.SubType,
-            selectionOptions: SelectionOptions?): ResultType {
+    override fun delete(type: ContentType, selectionOptions: SelectionOptions?): ResultType {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -184,14 +181,10 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         )
 
         val toUri: Map<ContentType, Uri> = hashMapOf(
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ALBUM)
-                        to MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.ARTIST)
-                        to MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.PLAYLIST)
-                        to MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
-                        to MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                ContentType.ALBUM to MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                ContentType.ARTIST to MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
+                ContentType.PLAYLIST to MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                ContentType.TRACK to MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         )
 
         internal val fromVanillaField = toVanillaField.entries.associateBy({it.value}, {it.key})

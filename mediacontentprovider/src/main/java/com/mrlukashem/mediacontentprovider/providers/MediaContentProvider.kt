@@ -24,42 +24,38 @@ class MediaContentProvider() : ContentProvider {
 //    }
   }
 
-  override fun getContentByKey(key: Int): ContentView {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
-
   override fun getType(): ContentType {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContent(wildCardWorlds: List<String>,
-                          resultCallback: ((List<ContentView>) -> Unit)?,
-                          maxCapacity: Int) {
+  override fun fetchContent(wildCardWorlds: List<String>,
+                            resultCallback: ((List<ContentView>) -> Unit)?,
+                            maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContent(contentType: ContentType,
-                          resultCallback: ((List<ContentView>) -> Unit)?,
-                          maxCapacity: Int) {
+  override fun fetchContent(contentType: ContentType,
+                            resultCallback: ((List<ContentView>) -> Unit)?,
+                            maxCapacity: Int) {
     val content = dataHandler?.query(QueryView(contentType))
     resultCallback?.invoke(content ?: ArrayList())
   }
 
-  override fun getContent(queryView: QueryView,
-                          resultCallback: ((List<ContentView>) -> Unit)?,
-                          maxCapacity: Int) {
+  override fun fetchContent(queryView: QueryView,
+                            resultCallback: ((List<ContentView>) -> Unit)?,
+                            maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContentFromParent(contentParent: ContentView,
-                                    resultCallback: ((List<ContentView>) -> Unit)?,
-                                    maxCapacity: Int) {
+  override fun fetchContentFromParent(contentParent: ContentView,
+                                      resultCallback: ((List<ContentView>) -> Unit)?,
+                                      maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  override fun getContentFromParent(queryView: QueryView,
-                                    resultCallback: ((List<ContentView>) -> Unit)?,
-                                    maxCapacity: Int) {
+  override fun fetchContentFromParent(queryView: QueryView,
+                                      resultCallback: ((List<ContentView>) -> Unit)?,
+                                      maxCapacity: Int) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 }

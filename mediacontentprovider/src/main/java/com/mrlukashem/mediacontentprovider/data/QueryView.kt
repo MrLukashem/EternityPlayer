@@ -25,17 +25,8 @@ data class QueryView(val contentType: ContentType,
   /*
     The constructor is only for Java users of the class.
    */
-  constructor(mainType: ContentType.MainType,
-              subType: ContentType.SubType,
-              vararg fieldsProjection: ContentField.FieldName)
-          : this(ContentType(mainType, subType), fieldsProjection.toSet())
-
-  constructor(mainType: ContentType.MainType,
-              subType: ContentType.SubType,
-              fieldsProjection: Set<ContentField.FieldName> = HashSet(),
-              selectionOptions: Set<SelectionOption> = HashSet(),
-              sortOption: SortOption? = null)
-          : this(ContentType(mainType, subType), fieldsProjection, selectionOptions, sortOption)
+  constructor(contentType: ContentType, vararg fieldsProjection: ContentField.FieldName)
+          : this(contentType, fieldsProjection.toSet())
 
   companion object QueryBuilder {
     fun build(init: QueryViewBuilder.() -> Unit) = QueryViewBuilder(init).build()
@@ -44,7 +35,7 @@ data class QueryView(val contentType: ContentType,
   }
 
   class QueryViewBuilder() : Buildable<QueryView, QueryViewBuilder> {
-    var contentType: ContentType = ContentType()
+    var contentType: ContentType = ContentType.TRACK
     var sortOption: SortOption? = null
     var selectionOptions: MutableSet<SelectionOption> = HashSet()
     var fieldsProjection: MutableSet<ContentField.FieldName> = HashSet()
@@ -67,7 +58,7 @@ data class QueryView(val contentType: ContentType,
     }
 
     override fun reset(): QueryViewBuilder {
-      contentType = ContentType()
+      contentType = ContentType.TRACK
       sortOption = null
       selectionOptions.clear()
       fieldsProjection.clear()
@@ -79,8 +70,8 @@ data class QueryView(val contentType: ContentType,
      * For Java users. Kotlin setter does not return this, it returns Unit (void).
      * @return this
      */
-    fun setContentType(mainType: ContentType.MainType, subType: ContentType.SubType) = apply {
-      contentType = ContentType(mainType, subType)
+    fun setType(type: ContentType) = apply {
+      contentType = type
     }
 
     /*

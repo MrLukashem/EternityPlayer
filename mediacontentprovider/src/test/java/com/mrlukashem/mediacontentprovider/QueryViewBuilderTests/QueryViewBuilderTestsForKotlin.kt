@@ -2,6 +2,7 @@ package com.mrlukashem.mediacontentprovider.QueryViewBuilderTests
 
 import com.mrlukashem.mediacontentprovider.data.QueryView
 import com.mrlukashem.mediacontentprovider.types.ContentType
+import com.mrlukashem.mediacontentprovider.types.ContentType.*
 import com.mrlukashem.mediacontentprovider.types.ContentField
 
 import org.junit.Assert
@@ -14,19 +15,19 @@ class QueryViewBuilderTestsForKotlin {
     @Test
     fun queryViewBuilderCompare() {
         var firstView = QueryView.build {
-            contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+            contentType = TRACK
             fieldsProjection.add(ContentField.FieldName.DATA)
             fieldsProjection.add(ContentField.FieldName.ALBUM)
             fieldsProjection.add(ContentField.FieldName.TITLE)
         }
         var secondView = QueryView.build {
-            contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.TRACK)
+            contentType = TRACK
             fieldsProjection.add(ContentField.FieldName.DATA)
             fieldsProjection.add(ContentField.FieldName.ALBUM)
             fieldsProjection.add(ContentField.FieldName.TITLE)
         }
         val thirdView = QueryView.build {
-            contentType = ContentType(ContentType.MainType.AUDIO, ContentType.SubType.PLAYLIST)
+            contentType = PLAYLIST
             fieldsProjection.add(ContentField.FieldName.DATA)
             fieldsProjection.add(ContentField.FieldName.ALBUM)
             fieldsProjection.add(ContentField.FieldName.TITLE)
@@ -44,8 +45,7 @@ class QueryViewBuilderTestsForKotlin {
         Assert.assertFalse(thirdView == firstView)
         Assert.assertFalse(thirdView == secondView)
 
-        val builder = QueryView.QueryViewBuilder().setContentType(
-                ContentType.MainType.VIDEO, ContentType.SubType.PLAYLIST).reset()
+        val builder = QueryView.QueryViewBuilder().setType(PLAYLIST).reset()
         val emptyViewAfterReset = builder.reset().build()
         val emptyViewByDefault = QueryView.build {}
         Assert.assertTrue(emptyViewAfterReset == emptyViewByDefault)

@@ -1,8 +1,8 @@
 package com.mrlukashem.mediacontentprovider.content
 
 import com.mrlukashem.mediacontentprovider.types.ContentField
-import com.mrlukashem.mediacontentprovider.types.ContentField.*
 import com.mrlukashem.mediacontentprovider.types.ContentType
+import com.mrlukashem.mediacontentprovider.types.FieldName
 
 /**
  * Created by MrLukashem on 14.01.2018.

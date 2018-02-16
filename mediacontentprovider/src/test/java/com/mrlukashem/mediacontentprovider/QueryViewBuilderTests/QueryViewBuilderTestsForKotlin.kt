@@ -1,9 +1,11 @@
 package com.mrlukashem.mediacontentprovider.QueryViewBuilderTests
 
-import com.mrlukashem.mediacontentprovider.data.QueryView
-import com.mrlukashem.mediacontentprovider.types.ContentType
+import com.mrlukashem.mediacontentprovider.data.*
+import com.mrlukashem.mediacontentprovider.data.ARTIST
 import com.mrlukashem.mediacontentprovider.types.ContentType.*
 import com.mrlukashem.mediacontentprovider.types.ContentField
+import com.mrlukashem.mediacontentprovider.types.ContentType.TRACK
+import com.mrlukashem.mediacontentprovider.types.FieldName
 
 import org.junit.Assert
 import org.junit.Test
@@ -16,21 +18,21 @@ class QueryViewBuilderTestsForKotlin {
     fun queryViewBuilderCompare() {
         var firstView = QueryView.build {
             contentType = TRACK
-            fieldsProjection.add(ContentField.FieldName.DATA)
-            fieldsProjection.add(ContentField.FieldName.ALBUM)
-            fieldsProjection.add(ContentField.FieldName.TITLE)
+            fieldsProjection.add(FieldName.DATA)
+            fieldsProjection.add(FieldName.ALBUM)
+            fieldsProjection.add(FieldName.TITLE)
         }
         var secondView = QueryView.build {
             contentType = TRACK
-            fieldsProjection.add(ContentField.FieldName.DATA)
-            fieldsProjection.add(ContentField.FieldName.ALBUM)
-            fieldsProjection.add(ContentField.FieldName.TITLE)
+            fieldsProjection.add(FieldName.DATA)
+            fieldsProjection.add(FieldName.ALBUM)
+            fieldsProjection.add(FieldName.TITLE)
         }
         val thirdView = QueryView.build {
             contentType = PLAYLIST
-            fieldsProjection.add(ContentField.FieldName.DATA)
-            fieldsProjection.add(ContentField.FieldName.ALBUM)
-            fieldsProjection.add(ContentField.FieldName.TITLE)
+            fieldsProjection.add(FieldName.DATA)
+            fieldsProjection.add(FieldName.ALBUM)
+            fieldsProjection.add(FieldName.TITLE)
         }
         val fourthView = QueryView.from(thirdView).build()
 
@@ -53,17 +55,17 @@ class QueryViewBuilderTestsForKotlin {
 
         firstView = QueryView.build {
             selectionOptions.add(QueryView.SelectionOption(ContentField(
-                    ContentField.FieldName.ALBUM, "IronMaiden"),
-                    QueryView.SelectionOption.SelectionType.EQUALS_GREATER))
+                    FieldName.ALBUM, "IronMaiden"),
+                    QueryView.SelectionOption.SelectionType.EG))
             selectionOptions.add(QueryView.SelectionOption(ContentField(
-                    ContentField.FieldName.ALBUM, "IronMaiden"),
-                    QueryView.SelectionOption.SelectionType.EQUALS_GREATER))
+                    FieldName.ALBUM, "IronMaiden"),
+                    QueryView.SelectionOption.SelectionType.EG))
         }
 
         secondView = QueryView.build {
            selectionOptions.add(QueryView.SelectionOption(ContentField(
-                   ContentField.FieldName.ALBUM, "IronMaiden"),
-                   QueryView.SelectionOption.SelectionType.EQUALS_GREATER))
+                   FieldName.ALBUM, "IronMaiden"),
+                   QueryView.SelectionOption.SelectionType.EG))
         }
         Assert.assertTrue(firstView == secondView)
     }

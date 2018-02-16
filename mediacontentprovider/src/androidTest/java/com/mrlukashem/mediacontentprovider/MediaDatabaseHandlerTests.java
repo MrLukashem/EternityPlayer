@@ -12,7 +12,7 @@ import com.mrlukashem.mediacontentprovider.data.QueryView;
 import com.mrlukashem.mediacontentprovider.mocks.CustomMockContentProvider;
 import com.mrlukashem.mediacontentprovider.mocks.ProviderTestDataController;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
-import com.mrlukashem.mediacontentprovider.types.ContentField.*;
+import com.mrlukashem.mediacontentprovider.types.FieldName;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,9 +29,10 @@ public class MediaDatabaseHandlerTests {
 
     public MediaDatabaseHandlerTests() {
         MockContentResolver resolver = new MockContentResolver();
-        ContentProvider provider = providerDataController.getProvider();
+        ContentProvider realProvider = providerDataController.getProvider();
 
-        resolver.addProvider(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.getAuthority(), provider);
+        resolver.addProvider(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.getAuthority(), realProvider);
         handler = new MediaDatabaseHandler(resolver);
     }
 
@@ -59,11 +60,12 @@ public class MediaDatabaseHandlerTests {
                 view.getContentFields().size() == PROJECTION_SIZE_WITH_HANDLE_Q2));
     }
 
-   /* @Test
+    @Test
     public void testSearch() {
-        List<ContentView> tracks = handler.search();
+        final String trackTitle = "Another Life";
+        List<ContentView> tracks = handler.search(trackTitle);
         Assert.assertFalse(tracks.isEmpty());
-    }*/
+    }
 /*
     @Test
     public void testDelete() {

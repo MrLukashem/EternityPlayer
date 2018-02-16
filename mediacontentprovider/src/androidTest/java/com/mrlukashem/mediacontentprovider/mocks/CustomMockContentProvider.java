@@ -13,6 +13,7 @@ import com.mrlukashem.mediacontentprovider.utils.Optional;
 import com.mrlukashem.mediacontentprovider.utils.StreamList;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,6 +140,10 @@ public class CustomMockContentProvider
     public Cursor query(
             Uri uri, String[] projection, String selection, String[] selectionArgs,
             String sortOrder) {
+        if (isFancySearch(uri)) {
+            return processFancySearch(uri);
+        }
+
         Optional<DataSet> dataSetResult = dataSets.getStream().filter(
                 dataSet -> dataSet.cols.containsAll(Arrays.asList(projection))).findFirst();
 
@@ -173,6 +178,27 @@ public class CustomMockContentProvider
         }
 
         return cursor;
+    }
+
+    private boolean isFancySearch(Uri uri) {
+        int size = uri.getPathSegments().size();
+        String search = uri.getPathSegments().get(size - 3);
+        String fancy = uri.getPathSegments().get(size - 2);
+
+        return search.equals("search") && fancy.equals("fancy");
+    }
+
+    private Cursor processFancySearch(Uri uri) {
+        int size = uri.getPathSegments().size();
+        String audio = uri.getPathSegments().get(size - 4);
+        if (!audio.equals("audio")) {
+            return new MockCursor(new String[] {}, Collections.emptyList());
+        }
+
+        DataSet dataSet = dataSets.get(0);
+        StreamList<String> sourceCols = dataSet.cols;
+        String[] cols = sourceCols.toArray(new String[sourceCols.size()]);
+        return new MockCursor(cols, Collections.singletonList(dataSet.rows.get(0)));
     }
 
     @Override

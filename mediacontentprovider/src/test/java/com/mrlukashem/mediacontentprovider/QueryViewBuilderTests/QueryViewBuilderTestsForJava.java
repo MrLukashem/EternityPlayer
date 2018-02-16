@@ -1,8 +1,10 @@
 package com.mrlukashem.mediacontentprovider.QueryViewBuilderTests;
 
 import com.mrlukashem.mediacontentprovider.data.QueryView;
+import com.mrlukashem.mediacontentprovider.data.QueryView.SelectionOption.*;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
 import com.mrlukashem.mediacontentprovider.types.ContentField;
+import com.mrlukashem.mediacontentprovider.types.FieldName;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,22 +16,22 @@ import org.junit.Test;
 public class QueryViewBuilderTestsForJava {
     @Test
     public void queryViewBuilderCompare() {
-        QueryView firstView = new QueryView.QueryViewBuilder()
+        QueryView firstView = QueryView.QueryBuilder.create()
                 .setType(ContentType.TRACK)
-                .setFieldProjection(ContentField.FieldName.DATA)
-                .setFieldProjection(ContentField.FieldName.ALBUM)
-                .setFieldProjection(ContentField.FieldName.TITLE).build();
-        QueryView secondView = new QueryView.QueryViewBuilder()
+                .setFieldProjection(FieldName.DATA)
+                .setFieldProjection(FieldName.ALBUM)
+                .setFieldProjection(FieldName.TITLE).build();
+        QueryView secondView = QueryView.QueryBuilder.create()
                 .setType(ContentType.TRACK)
-                .setFieldProjection(ContentField.FieldName.DATA)
-                .setFieldProjection(ContentField.FieldName.ALBUM)
-                .setFieldProjection(ContentField.FieldName.TITLE).build();
-        QueryView thirdView = new QueryView.QueryViewBuilder()
+                .setFieldProjection(FieldName.DATA)
+                .setFieldProjection(FieldName.ALBUM)
+                .setFieldProjection(FieldName.TITLE).build();
+        QueryView thirdView = QueryView.QueryBuilder.create()
                 .setType(ContentType.PLAYLIST)
-                .setFieldProjection(ContentField.FieldName.DATA)
-                .setFieldProjection(ContentField.FieldName.ALBUM)
-                .setFieldProjection(ContentField.FieldName.TITLE).build();
-        QueryView fourthView = new QueryView.QueryViewBuilder().from(thirdView).build();
+                .setFieldProjection(FieldName.DATA)
+                .setFieldProjection(FieldName.ALBUM)
+                .setFieldProjection(FieldName.TITLE).build();
+        QueryView fourthView = QueryView.QueryBuilder.create().from(thirdView).build();
 
         Assert.assertTrue(firstView.equals(secondView));
         Assert.assertTrue(!firstView.equals(thirdView));
@@ -42,28 +44,26 @@ public class QueryViewBuilderTestsForJava {
         Assert.assertFalse(thirdView.equals(firstView));
         Assert.assertFalse(thirdView.equals(secondView));
 
-        QueryView.QueryViewBuilder builder = new QueryView.QueryViewBuilder().setType(
+        QueryView.QueryViewBuilder builder = QueryView.QueryBuilder.create().setType(
                 ContentType.PLAYLIST).reset();
         QueryView emptyViewAfterReset = builder.reset().build();
-        QueryView emptyViewByDefault = new QueryView.QueryViewBuilder().build();
+        QueryView emptyViewByDefault = QueryView.QueryBuilder.create().build();
         Assert.assertTrue(emptyViewAfterReset.equals(emptyViewByDefault));
         Assert.assertTrue(emptyViewAfterReset.getContentType().equals(
                 emptyViewByDefault.getContentType()));
 
-        firstView = new QueryView.QueryViewBuilder()
+        firstView = QueryView.QueryBuilder.create()
                 .setSelectionOption(
                         new QueryView.SelectionOption(new ContentField(
-                                ContentField.FieldName.ALBUM, "IronMaiden"),
-                                QueryView.SelectionOption.SelectionType.EQUALS_GREATER))
+                                FieldName.ALBUM, "IronMaiden"), SelectionType.EG))
                 .setSelectionOption(
                         new QueryView.SelectionOption(new ContentField(
-                                ContentField.FieldName.ALBUM, "IronMaiden"),
-                                QueryView.SelectionOption.SelectionType.EQUALS_GREATER)).build();
+                                FieldName.ALBUM, "IronMaiden"),
+                                SelectionType.EG)).build();
 
-        secondView = new QueryView.QueryViewBuilder().setSelectionOption(
+        secondView = QueryView.QueryBuilder.create().setSelectionOption(
                 new QueryView.SelectionOption(new ContentField(
-                        ContentField.FieldName.ALBUM, "IronMaiden"),
-                        QueryView.SelectionOption.SelectionType.EQUALS_GREATER)).build();
+                        FieldName.ALBUM, "IronMaiden"), SelectionType.EG)).build();
         Assert.assertTrue(firstView.equals(secondView));
     }
 }

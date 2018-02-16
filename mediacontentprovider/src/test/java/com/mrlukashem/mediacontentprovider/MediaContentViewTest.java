@@ -3,7 +3,7 @@ package com.mrlukashem.mediacontentprovider;
 import com.mrlukashem.mediacontentprovider.content.ContentView;
 import com.mrlukashem.mediacontentprovider.content.MediaContentView;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
-import com.mrlukashem.mediacontentprovider.types.ContentField;
+import com.mrlukashem.mediacontentprovider.types.FieldName;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,42 +15,42 @@ public class MediaContentViewTest {
 
   private ContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
           .setType(ContentType.TRACK)
-          .setField(ContentField.FieldName.ALBUM, albumName)
-          .setField(ContentField.FieldName.ARTIST, artistName)
-          .setField(ContentField.FieldName.TITLE, titleName)
+          .setField(FieldName.ALBUM, albumName)
+          .setField(FieldName.ARTIST, artistName)
+          .setField(FieldName.TITLE, titleName)
           .build();
   private ContentView secondContentDesc = new MediaContentView.MediaContentViewBuilder()
           .setType(ContentType.TRACK)
-          .setField(ContentField.FieldName.ALBUM, albumName)
-          .setField(ContentField.FieldName.ARTIST, artistName)
-          .setField(ContentField.FieldName.TITLE, titleName)
+          .setField(FieldName.ALBUM, albumName)
+          .setField(FieldName.ARTIST, artistName)
+          .setField(FieldName.TITLE, titleName)
           .build();
 
   private ContentView thirdContentDesc = new MediaContentView.MediaContentViewBuilder()
           .setType(ContentType.ALBUM)
-          .setField(ContentField.FieldName.ALBUM, albumName)
-          .setField(ContentField.FieldName.ARTIST, artistName)
-          .setField(ContentField.FieldName.TITLE, titleName)
+          .setField(FieldName.ALBUM, albumName)
+          .setField(FieldName.ARTIST, artistName)
+          .setField(FieldName.TITLE, titleName)
           .build();
 
   @Test
   public void getFieldTest() {
       ContentView firstContentDesc = new MediaContentView.MediaContentViewBuilder()
             .setType(ContentType.TRACK)
-            .setField(ContentField.FieldName.ALBUM, albumName)
-            .setField(ContentField.FieldName.ARTIST, artistName)
-            .setField(ContentField.FieldName.TITLE, titleName)
+            .setField(FieldName.ALBUM, albumName)
+            .setField(FieldName.ARTIST, artistName)
+            .setField(FieldName.TITLE, titleName)
             .build();
 
     Assert.assertTrue(
-            firstContentDesc.get(ContentField.FieldName.ALBUM).equals(albumName));
+            firstContentDesc.get(FieldName.ALBUM).equals(albumName));
     Assert.assertTrue(
-            firstContentDesc.get(ContentField.FieldName.ARTIST).equals(artistName));
+            firstContentDesc.get(FieldName.ARTIST).equals(artistName));
     Assert.assertTrue(
-            firstContentDesc.get(ContentField.FieldName.TITLE).equals(titleName));
+            firstContentDesc.get(FieldName.TITLE).equals(titleName));
     Assert.assertFalse(
-            firstContentDesc.get(ContentField.FieldName.ARTIST).equals(albumName));
+            firstContentDesc.get(FieldName.ARTIST).equals(albumName));
     Assert.assertFalse(
-            firstContentDesc.get(ContentField.FieldName.ARTIST).equals(titleName));
+            firstContentDesc.get(FieldName.ARTIST).equals(titleName));
   }
 }

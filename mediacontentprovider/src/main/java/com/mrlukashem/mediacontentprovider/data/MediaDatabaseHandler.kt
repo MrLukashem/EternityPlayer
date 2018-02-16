@@ -9,10 +9,12 @@ import com.mrlukashem.mediacontentprovider.content.ContentView
 import com.mrlukashem.mediacontentprovider.content.MediaContentView
 import com.mrlukashem.mediacontentprovider.data.DataHandler.*
 import com.mrlukashem.mediacontentprovider.types.ContentField
-import com.mrlukashem.mediacontentprovider.types.ContentField.*
 import com.mrlukashem.mediacontentprovider.types.ContentType
+import com.mrlukashem.mediacontentprovider.types.FieldName
 
 import kotlin.collections.HashSet
+
+fun String.Companion.empty() = ""
 
 typealias HandleGenerator = (Cursor) -> String
 
@@ -92,32 +94,26 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         return result
     }
 
-    override fun search(wildCardWorldWithType: WildCardUriPair): ContentViews {
-        val (type, wildCard) = wildCardWorldWithType
-        val uri = Converter.toUri[type]
+    override fun search(wildCard: String): ContentViews {
+        val uri = Uri.parse(Constants.SEARCH_FANCY_PATH)
         if (wildCard.isBlank() && uri != null) {
             return emptyList()
         }
 
-        val fancySearchUri = Uri.withAppendedPath(uri, createFancySearchSegment(wildCard))
-        val generator = chooseHandleGenerateStrategy(uri)
-        return doSearch(type, fancySearchUri, generator)
+        val fancySearchUri = Uri.withAppendedPath(uri, wildCard)
+        val generator = chooseHandleGenerateStrategy(uri, true)
+        return doSearch(fancySearchUri, generator)
     }
 
-    private fun createFancySearchSegment(wildCard: String) = buildString {
-        append(Constants.SEARCH_FANCY)
-        append(wildCard)
-    }
-
-    private fun doSearch(type: ContentType, searchUri: Uri, generator: HandleGenerator):
+    private fun doSearch(searchUri: Uri, generator: HandleGenerator):
             ContentViews {
         val cursor = resolver.query(
                 searchUri, null, null, null, null)
-        return buildContentViews(type, cursor, generator)
+        return buildContentViews(ContentType.TRACK, cursor, generator)
     }
 
-    private fun chooseHandleGenerateStrategy(uri: Uri?): HandleGenerator {
-        val baseField = convertUriToHandleFieldName(uri)
+    private fun chooseHandleGenerateStrategy(uri: Uri?, isFancy: Boolean = false): HandleGenerator {
+        val baseField = if (isFancy) String.empty() else convertUriToHandleFieldName(uri)
         when (baseField) {
             MediaStore.Audio.Albums.ALBUM,
             MediaStore.Audio.Artists.ARTIST -> {
@@ -155,7 +151,7 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
     private object Constants {
         const val EMPTY_HANDLE_KEY = ""
         const val HANDLE_KEY_NAME = "handleKey"
-        const val SEARCH_FANCY = "search/fancy/"
+        const val SEARCH_FANCY_PATH = "content://media/external/audio/search/fancy/"
     }
 
     private object Converter {
@@ -204,8 +200,6 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
             internal set
         var tableUri: Uri? = null
             private set
-
-
 
         init {
             initializeWith(queryView)

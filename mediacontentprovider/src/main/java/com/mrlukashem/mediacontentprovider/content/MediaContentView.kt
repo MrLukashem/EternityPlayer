@@ -3,6 +3,7 @@ package com.mrlukashem.mediacontentprovider.content
 import com.mrlukashem.mediacontentprovider.generic.Buildable
 import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.ContentField
+import com.mrlukashem.mediacontentprovider.types.FieldName
 
 class MediaContentView internal constructor(
         override val contentType: ContentType,
@@ -12,23 +13,23 @@ class MediaContentView internal constructor(
     constructor(contentType: ContentType, contentFields: MutableSet<ContentField>)
           : this(contentType, contentFields, HashMap())
 
-    private fun getFieldValue(fieldName: ContentField.FieldName): String? {
+    private fun getFieldValue(fieldName: FieldName): String? {
         return contentFields.find {
             it.fieldName == fieldName
         }?.fieldValue
     }
 
-    override fun getOrDefault(name: ContentField.FieldName, defaultValue: String): String {
+    override fun getOrDefault(name: FieldName, defaultValue: String): String {
         return getFieldValue(name) ?: defaultValue
     }
 
-    override operator fun get(name: ContentField.FieldName): String {
+    override operator fun get(name: FieldName): String {
         val fieldValue = getFieldValue(name)
         return fieldValue ?: throw NoSuchElementException(
                 "The ContentView does not contain ${name.name} field")
     }
 
-    override fun containsField(name: ContentField.FieldName): Boolean {
+    override fun containsField(name: FieldName): Boolean {
         return contentFields.find {
             it.fieldName == name
         } != null
@@ -98,7 +99,7 @@ class MediaContentView internal constructor(
         * For Java users. Kotlin setter does not return this, it returns Unit (void).
         * @return this
         */
-        fun setField(fieldName: ContentField.FieldName, fieldValue: String) = apply {
+        fun setField(fieldName: FieldName, fieldValue: String) = apply {
             contentFields.add(ContentField(fieldName, fieldValue))
         }
     }

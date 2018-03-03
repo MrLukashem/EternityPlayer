@@ -1,6 +1,7 @@
 package com.mrlukashem.mediacontentprovider.data
 
 import com.mrlukashem.mediacontentprovider.generic.Buildable
+import com.mrlukashem.mediacontentprovider.generic.Factory
 import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.ContentField
 import com.mrlukashem.mediacontentprovider.types.FieldName
@@ -15,13 +16,14 @@ import com.mrlukashem.mediacontentprovider.types.FieldName
 data class QueryView(val contentType: ContentType,
                      val fieldsProjection: Set<FieldName> = HashSet(),
                      val selectionOptions: Set<String> = HashSet(),
-                     val sortOption: SortOption? = null) {
+                     val sortOptions: Set<FieldName> = HashSet(),
+                     val sortType: SortType = SortType.DESC) {
 
     constructor(contentType: ContentType,
                 selectionOptions: Set<String> = HashSet(),
-                sortOption: SortOption? = null,
+                sortOptions: Set<FieldName> = HashSet(),
                 vararg fieldsProjection: FieldName)
-            : this(contentType, fieldsProjection.toSet(), selectionOptions, sortOption)
+            : this(contentType, fieldsProjection.toSet(), selectionOptions, sortOptions)
 
     /*
         The constructor is only for Java users of the class.
@@ -33,20 +35,19 @@ data class QueryView(val contentType: ContentType,
                 vararg selectionOptions: String)
             : this(contentType, fieldsProjection, selectionOptions.toHashSet())
 
-    companion object QueryBuilder {
+    companion object QueryBuilder : Factory<QueryViewBuilder> {
         fun build(init: QueryViewBuilder.() -> Unit) = QueryViewBuilder(init).build()
         fun from(viewBase: QueryView) = QueryViewBuilder().from(viewBase)
-        fun create() = QueryViewBuilder()
+        override fun create() = QueryViewBuilder()
     }
 
     class QueryViewBuilder() : Buildable<QueryView, QueryViewBuilder> {
         var contentType: ContentType = ContentType.TRACK
-        var sortOption: SortOption? = null
+        var sortType: SortType = QueryView.SortType.DESC
+        var sortOptions: MutableSet<FieldName> = HashSet()
         var selectionOptions: MutableSet<SelectionOption> = HashSet()
         var rawSelectionOptions: MutableSet<String> = HashSet()
         var fieldsProjection: MutableSet<FieldName> = HashSet()
-
-        fun addOptions(vararg options: String) = apply { rawSelectionOptions.addAll(options) }
 
         constructor(init: QueryViewBuilder.() -> Unit): this() {
             init()
@@ -54,21 +55,23 @@ data class QueryView(val contentType: ContentType,
 
         override fun build(): QueryView {
             rawSelectionOptions.addAll(convertToRawOptions(selectionOptions))
-            return QueryView(contentType, fieldsProjection, rawSelectionOptions, sortOption)
+            return QueryView(contentType, fieldsProjection, rawSelectionOptions, sortOptions,
+                    sortType)
         }
 
         override fun from(tBase: QueryView): QueryViewBuilder {
             contentType = tBase.contentType
-            sortOption = tBase.sortOption
+            sortOptions = tBase.sortOptions.toMutableSet()
             rawSelectionOptions = tBase.selectionOptions.toMutableSet()
             fieldsProjection = tBase.fieldsProjection.toMutableSet()
+            sortType = tBase.sortType
 
             return this
         }
 
         override fun reset(): QueryViewBuilder {
             contentType = ContentType.TRACK
-            sortOption = null
+            sortOptions.clear()
             selectionOptions.clear()
             rawSelectionOptions.clear()
             fieldsProjection.clear()
@@ -76,13 +79,15 @@ data class QueryView(val contentType: ContentType,
             return this
         }
 
+        fun makeOptions(vararg options: String) = apply { rawSelectionOptions.addAll(options) }
+
         private fun convertToRawOptions(selectionOptions: MutableSet<SelectionOption>)
                 : MutableSet<String> {
             val rawOptions: MutableSet<String> = HashSet()
             selectionOptions.mapTo(rawOptions) {
                 val (field, value) = it.field
                 StringBuilder(5).apply {
-                    append(field)
+                    append(field?.name)
                     append(":")
                     append(value)
                     append(":")
@@ -99,6 +104,14 @@ data class QueryView(val contentType: ContentType,
         */
         fun setType(type: ContentType) = apply {
             contentType = type
+        }
+
+        /*
+        * For Java users. Kotlin setter does not return this, it returns Unit (void).
+        * @return this
+        */
+        fun setSortType(type: SortType) = apply {
+            sortType = type
         }
 
         /*
@@ -129,11 +142,17 @@ data class QueryView(val contentType: ContentType,
     /*
     * SortOption describe a sort type that a user want to apply to a MediaProvider result.
     */
-    data class SortOption(val field: FieldName, val sortType: SortType) {
-        enum class SortType {
-            DESC,
-            ASC,
-        }
+    enum class SortType {
+        DESC,
+        ASC,
+    }
+
+    enum class SelectionType {
+        E,  // Equals
+        EG, // Equals greater
+        EL, // Equals less
+        G,  // Greater
+        L,  // Less
     }
 
     /*
@@ -144,12 +163,9 @@ data class QueryView(val contentType: ContentType,
         constructor(fieldName: FieldName, fieldValue: String, type: SelectionType)
                 : this(ContentField(fieldName, fieldValue), type)
 
-        enum class SelectionType {
-            E,  // Equals
-            EG, // Equals greater
-            EL, // Equals less
-            G,  // Greater
-            L,  // Less
+        companion object Factory {
+            fun create(fieldName: FieldName, fieldValue: String, type: SelectionType) =
+                    SelectionOption(fieldName, fieldValue, type)
         }
     }
 }

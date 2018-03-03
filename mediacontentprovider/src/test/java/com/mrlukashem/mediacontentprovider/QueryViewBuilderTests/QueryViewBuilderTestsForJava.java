@@ -1,7 +1,7 @@
 package com.mrlukashem.mediacontentprovider.QueryViewBuilderTests;
 
 import com.mrlukashem.mediacontentprovider.data.QueryView;
-import com.mrlukashem.mediacontentprovider.data.QueryView.SelectionOption.*;
+import com.mrlukashem.mediacontentprovider.data.QueryView.*;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
 import com.mrlukashem.mediacontentprovider.types.ContentField;
 import com.mrlukashem.mediacontentprovider.types.FieldName;
@@ -54,12 +54,11 @@ public class QueryViewBuilderTestsForJava {
 
         firstView = QueryView.QueryBuilder.create()
                 .setSelectionOption(
-                        new QueryView.SelectionOption(new ContentField(
-                                FieldName.ALBUM, "IronMaiden"), SelectionType.EG))
+                        QueryView.SelectionOption.Factory.create(
+                                FieldName.ALBUM, "IronMaiden", SelectionType.E))
                 .setSelectionOption(
-                        new QueryView.SelectionOption(new ContentField(
-                                FieldName.ALBUM, "IronMaiden"),
-                                SelectionType.EG)).build();
+                        QueryView.SelectionOption.Factory.create(
+                                FieldName.ALBUM, "IronMaiden", SelectionType.EG)).build();
 
         secondView = QueryView.QueryBuilder.create().setSelectionOption(
                 new QueryView.SelectionOption(new ContentField(

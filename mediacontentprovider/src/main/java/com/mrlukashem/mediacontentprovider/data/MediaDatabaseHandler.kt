@@ -17,7 +17,7 @@ import kotlin.collections.HashSet
 fun String.Companion.empty() = ""
 
 typealias HandleGenerator = (Cursor) -> String
-
+// TODO: ErrorListener support?
 class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler {
     override fun query(queryView: QueryView): ContentViews {
         val extractor = QueryExtractor(queryView)
@@ -67,7 +67,7 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Artists.ARTIST
         MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Playlists.DATA
         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI -> MediaStore.Audio.Media.DATA
-        else -> ""
+        else -> String.empty()
     }
 
     private fun buildContentViews(type: ContentType, cursor: Cursor?,
@@ -187,7 +187,7 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         internal val fromUri = toUri.entries.associateBy({it.value}, {it.key})
     }
 
-    private inner class QueryExtractor(queryView: QueryView) {
+    private class QueryExtractor(queryView: QueryView) {
         lateinit var vanillaProjection: Array<String>
             internal set
         lateinit var type: ContentType
@@ -209,8 +209,18 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
             vanillaProjection = queryView.fieldsProjection.mapNotNull {
                 Converter.toVanillaField[it]
             }.toTypedArray()
+
+            val (selection, selectionArgs) = convertToVanillaSelection(queryView.selectionOptions)
+            vanillaSelection = selection
+            vanillaSelectionArgs = selectionArgs
+
             type = queryView.contentType
             tableUri = Converter.toUri[queryView.contentType]
+        }
+
+        private fun convertToVanillaSelection(inputSelectionStyle: Set<String>)
+                : Pair<String?, Array<String>?> {
+            return Pair()
         }
     }
 }

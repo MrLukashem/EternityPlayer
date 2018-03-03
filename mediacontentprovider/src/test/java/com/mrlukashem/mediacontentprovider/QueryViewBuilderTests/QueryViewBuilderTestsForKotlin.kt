@@ -1,10 +1,9 @@
 package com.mrlukashem.mediacontentprovider.QueryViewBuilderTests
 
 import com.mrlukashem.mediacontentprovider.data.*
-import com.mrlukashem.mediacontentprovider.data.ARTIST
 import com.mrlukashem.mediacontentprovider.types.ContentType.*
-import com.mrlukashem.mediacontentprovider.types.ContentField
 import com.mrlukashem.mediacontentprovider.types.ContentType.TRACK
+import com.mrlukashem.mediacontentprovider.types.ContentField
 import com.mrlukashem.mediacontentprovider.types.FieldName
 
 import org.junit.Assert
@@ -55,17 +54,14 @@ class QueryViewBuilderTestsForKotlin {
 
         firstView = QueryView.build {
             selectionOptions.add(QueryView.SelectionOption(ContentField(
-                    FieldName.ALBUM, "IronMaiden"),
-                    QueryView.SelectionOption.SelectionType.EG))
+                    FieldName.ALBUM, "IronMaiden"), QueryView.SelectionType.EG))
             selectionOptions.add(QueryView.SelectionOption(ContentField(
-                    FieldName.ALBUM, "IronMaiden"),
-                    QueryView.SelectionOption.SelectionType.EG))
+                    FieldName.ALBUM, "IronMaiden"), QueryView.SelectionType.EG))
         }
 
         secondView = QueryView.build {
            selectionOptions.add(QueryView.SelectionOption(ContentField(
-                   FieldName.ALBUM, "IronMaiden"),
-                   QueryView.SelectionOption.SelectionType.EG))
+                   FieldName.ALBUM, "IronMaiden"), QueryView.SelectionType.EG))
         }
         Assert.assertTrue(firstView == secondView)
     }

@@ -9,6 +9,7 @@ import android.test.mock.MockContentResolver;
 import com.mrlukashem.mediacontentprovider.content.ContentView;
 import com.mrlukashem.mediacontentprovider.data.MediaDatabaseHandler;
 import com.mrlukashem.mediacontentprovider.data.QueryView;
+import com.mrlukashem.mediacontentprovider.data.QueryView.*;
 import com.mrlukashem.mediacontentprovider.mocks.CustomMockContentProvider;
 import com.mrlukashem.mediacontentprovider.mocks.ProviderTestDataController;
 import com.mrlukashem.mediacontentprovider.types.ContentType;
@@ -58,6 +59,20 @@ public class MediaDatabaseHandlerTests {
         Assert.assertTrue(tracks.size() == providerDataController.getTotalTracks());
         tracks.forEach(view -> Assert.assertTrue(
                 view.getContentFields().size() == PROJECTION_SIZE_WITH_HANDLE_Q2));
+    }
+
+    @Test
+    public void testQuerySelection() {
+        QueryView queryView = new QueryView.QueryViewBuilder()
+                .setType(ContentType.TRACK)
+                .setFieldProjection(FieldName.TITLE)
+                .setFieldProjection(FieldName.ALBUM)
+                .setSelectionOption(new QueryView.SelectionOption(
+                        FieldName.TITLE, "Iron Maiden", SelectionType.EG))
+                .build();
+        List<ContentView> tracks = handler.query(queryView);
+        Assert.assertTrue(tracks.size() > 0);
+        Assert.assertTrue(tracks.get(0).get(FieldName.TITLE).equals("Iron Maiden"));
     }
 
     @Test

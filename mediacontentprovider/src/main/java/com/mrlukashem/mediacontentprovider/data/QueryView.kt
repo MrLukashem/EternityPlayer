@@ -89,9 +89,9 @@ data class QueryView(val contentType: ContentType,
                 StringBuilder(5).apply {
                     append(field?.name)
                     append(":")
-                    append(value)
-                    append(":")
                     append(it.type.name)
+                    append(":")
+                    append(value)
                 }.toString()
             }
 

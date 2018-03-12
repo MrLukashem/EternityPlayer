@@ -176,7 +176,7 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
                 FieldName.ID to MediaStore.MediaColumns._ID
         )
 
-        val toUri: Map<ContentType, Uri> = hashMapOf(
+        internal val toUri: Map<ContentType, Uri> = hashMapOf(
                 ContentType.ALBUM to MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 ContentType.ARTIST to MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
                 ContentType.PLAYLIST to MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
@@ -185,6 +185,20 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
 
         internal val fromVanillaField = toVanillaField.entries.associateBy({it.value}, {it.key})
         internal val fromUri = toUri.entries.associateBy({it.value}, {it.key})
+
+        private val selectionRegex = "(.+):(E|EG|EL|L|G):(.+)".toRegex()
+
+        internal fun toVanillaSelection(selection: String)
+                : Pair<String?, Array<String>?>? {
+
+                val matcher = selectionRegex.matchEntire(selection)
+                if (matcher != null) {
+                    val fieldName = matcher.groupValues[1]
+                    val fieldValue = matcher.groupValues[3]
+                    return Pair(fieldName, fieldValue)
+                }
+            return null
+        }
     }
 
     private class QueryExtractor(queryView: QueryView) {
@@ -210,17 +224,15 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
                 Converter.toVanillaField[it]
             }.toTypedArray()
 
-            val (selection, selectionArgs) = convertToVanillaSelection(queryView.selectionOptions)
-            vanillaSelection = selection
-            vanillaSelectionArgs = selectionArgs
+//            val (selection, selectionArgs) = convertToVanillaSelection(queryView.selectionOptions)
+//            vanillaSelection = selection
+//            vanillaSelectionArgs = selectionArgs
+            queryView.selectionOptions.map(Converter::toVanillaSelection)
+            Converter.toVanillaSelection(queryView.selectionOptions)
 
             type = queryView.contentType
             tableUri = Converter.toUri[queryView.contentType]
         }
 
-        private fun convertToVanillaSelection(inputSelectionStyle: Set<String>)
-                : Pair<String?, Array<String>?> {
-            return Pair()
-        }
     }
 }

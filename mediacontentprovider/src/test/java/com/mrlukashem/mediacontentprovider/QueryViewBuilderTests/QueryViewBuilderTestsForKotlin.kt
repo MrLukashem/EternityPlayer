@@ -1,9 +1,9 @@
 package com.mrlukashem.mediacontentprovider.QueryViewBuilderTests
 
 import com.mrlukashem.mediacontentprovider.data.*
+import com.mrlukashem.mediacontentprovider.data.ALBUM
 import com.mrlukashem.mediacontentprovider.types.ContentType.*
 import com.mrlukashem.mediacontentprovider.types.ContentType.TRACK
-import com.mrlukashem.mediacontentprovider.types.ContentField
 import com.mrlukashem.mediacontentprovider.types.FieldName
 
 import org.junit.Assert
@@ -53,15 +53,11 @@ class QueryViewBuilderTestsForKotlin {
         Assert.assertTrue(emptyViewAfterReset.contentType == emptyViewByDefault.contentType)
 
         firstView = QueryView.build {
-            selectionOptions.add(QueryView.SelectionOption(ContentField(
-                    FieldName.ALBUM, "IronMaiden"), QueryView.SelectionType.EG))
-            selectionOptions.add(QueryView.SelectionOption(ContentField(
-                    FieldName.ALBUM, "IronMaiden"), QueryView.SelectionType.EG))
+            rawSelectionOptions.add(ALBUM equals "IronMaiden")
         }
 
         secondView = QueryView.build {
-           selectionOptions.add(QueryView.SelectionOption(ContentField(
-                   FieldName.ALBUM, "IronMaiden"), QueryView.SelectionType.EG))
+            rawSelectionOptions.add(ALBUM equals "IronMaiden")
         }
         Assert.assertTrue(firstView == secondView)
     }

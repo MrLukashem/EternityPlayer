@@ -188,16 +188,55 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
 
         private val selectionRegex = "(.+):(E|EG|EL|L|G):(.+)".toRegex()
 
-        internal fun toVanillaSelection(selection: String)
-                : Pair<String?, Array<String>?>? {
-
-                val matcher = selectionRegex.matchEntire(selection)
-                if (matcher != null) {
-                    val fieldName = matcher.groupValues[1]
+        internal fun toVanillaSelection(selections: List<String>)
+                : Pair<String?, Array<String>?> {
+            val vanillaSelection = mutableListOf<String>()
+            val vanillaSelectionArgs = mutableListOf<String>()
+            selections.forEach {
+                val matcher: MatchResult? = selectionRegex.matchEntire(it)
+                if (matcher.isMatcherValid()) {
+                    val fieldName = matcher!!.groupValues[1]
+                    val op = matcher.groupValues[2]
                     val fieldValue = matcher.groupValues[3]
-                    return Pair(fieldName, fieldValue)
+
+                    vanillaSelection.add("$fieldName ${toVanillaOperator(op)} ?")
+                    vanillaSelectionArgs.add(fieldValue)
                 }
-            return null
+            }
+
+            return createFinalResult(vanillaSelection, vanillaSelectionArgs)
+        }
+
+        private fun MatchResult?.isMatcherValid() = this != null && groupValues.size == 4
+
+        private fun toVanillaOperator(newStyleOperator: String) = when (newStyleOperator) {
+            "E" -> "="
+            "EG" -> ">="
+            "EL" -> "<="
+            "L" -> "<"
+            "G" -> ">"
+            else -> ""
+        }
+
+        private fun createFinalResult(vanillaSelection: MutableList<String>,
+                                      vanillaSelectionArgs: MutableList<String>)
+                : Pair<String?, Array<String>?> {
+            return if (vanillaSelectionArgs.isNotEmpty() && vanillaSelectionArgs.isNotEmpty()) {
+                Pair(joinSelectionElements(vanillaSelection), vanillaSelectionArgs.toTypedArray())
+            } else {
+                Pair(null, null)
+            }
+        }
+
+        private fun joinSelectionElements(vanillaSelection: MutableList<String>): String {
+            val resultBuilder = StringBuilder()
+            vanillaSelection.forEachIndexed() {
+                
+                resultBuilder.append(it)
+                resultBuilder.takeIf { vanillaSelection.size == 3}?.append(" AND ")
+            }
+            resultBuilder.
+            return resultBuilder.toString()
         }
     }
 

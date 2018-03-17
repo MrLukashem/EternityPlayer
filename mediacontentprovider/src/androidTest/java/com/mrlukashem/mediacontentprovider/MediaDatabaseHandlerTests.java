@@ -68,7 +68,7 @@ public class MediaDatabaseHandlerTests {
                 .setFieldProjection(FieldName.TITLE)
                 .setFieldProjection(FieldName.ALBUM)
                 .setSelectionOption(new QueryView.SelectionOption(
-                        FieldName.TITLE, "Iron Maiden", SelectionType.EG))
+                        FieldName.TITLE, "Iron Maiden", SelectionType.E))
                 .build();
         List<ContentView> tracks = handler.query(queryView);
         Assert.assertTrue(tracks.size() > 0);

@@ -7,7 +7,12 @@ import android.provider.MediaStore
 
 import com.mrlukashem.mediacontentprovider.content.ContentView
 import com.mrlukashem.mediacontentprovider.content.MediaContentView
+import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.EQUALS
 import com.mrlukashem.mediacontentprovider.data.DataHandler.*
+import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.EQUALS_GREATER
+import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.EQUALS_LESS
+import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.GREATER
+import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.LESS
 import com.mrlukashem.mediacontentprovider.types.ContentField
 import com.mrlukashem.mediacontentprovider.types.ContentType
 import com.mrlukashem.mediacontentprovider.types.FieldName
@@ -152,6 +157,7 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         const val EMPTY_HANDLE_KEY = ""
         const val HANDLE_KEY_NAME = "handleKey"
         const val SEARCH_FANCY_PATH = "content://media/external/audio/search/fancy/"
+        const val AND_OPERATOR = " AND "
     }
 
     private object Converter {
@@ -186,7 +192,8 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         internal val fromVanillaField = toVanillaField.entries.associateBy({it.value}, {it.key})
         internal val fromUri = toUri.entries.associateBy({it.value}, {it.key})
 
-        private val selectionRegex = "(.+):(E|EG|EL|L|G):(.+)".toRegex()
+        private val selectionRegex =
+                "(.+):($EQUALS|$EQUALS_GREATER|$EQUALS_LESS|$LESS|$GREATER):(.+)".toRegex()
 
         internal fun toVanillaSelection(selections: List<String>)
                 : Pair<String?, Array<String>?> {
@@ -210,11 +217,11 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
         private fun MatchResult?.isMatcherValid() = this != null && groupValues.size == 4
 
         private fun toVanillaOperator(newStyleOperator: String) = when (newStyleOperator) {
-            "E" -> "="
-            "EG" -> ">="
-            "EL" -> "<="
-            "L" -> "<"
-            "G" -> ">"
+            EQUALS -> "="
+            EQUALS_GREATER -> ">="
+            EQUALS_LESS -> "<="
+            LESS -> "<"
+            GREATER -> ">"
             else -> ""
         }
 
@@ -230,12 +237,12 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
 
         private fun joinSelectionElements(vanillaSelection: MutableList<String>): String {
             val resultBuilder = StringBuilder()
-            vanillaSelection.forEachIndexed() {
-                
+            vanillaSelection.forEachIndexed { idx, it ->
                 resultBuilder.append(it)
-                resultBuilder.takeIf { vanillaSelection.size == 3}?.append(" AND ")
+                resultBuilder.takeIf {
+                    vanillaSelection.size - 1 != idx }?.append(Constants.AND_OPERATOR)
             }
-            resultBuilder.
+
             return resultBuilder.toString()
         }
     }
@@ -263,11 +270,10 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
                 Converter.toVanillaField[it]
             }.toTypedArray()
 
-//            val (selection, selectionArgs) = convertToVanillaSelection(queryView.selectionOptions)
-//            vanillaSelection = selection
-//            vanillaSelectionArgs = selectionArgs
-            queryView.selectionOptions.map(Converter::toVanillaSelection)
-            Converter.toVanillaSelection(queryView.selectionOptions)
+            val (selection, selectionArgs) = Converter.toVanillaSelection(
+                    queryView.selectionOptions.toMutableList())
+            vanillaSelection = selection
+            vanillaSelectionArgs = selectionArgs
 
             type = queryView.contentType
             tableUri = Converter.toUri[queryView.contentType]

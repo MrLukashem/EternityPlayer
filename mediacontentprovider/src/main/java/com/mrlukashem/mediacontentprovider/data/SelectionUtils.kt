@@ -4,6 +4,16 @@ package com.mrlukashem.mediacontentprovider.data
  * Created by MrLukashem on 16.02.2018.
  */
 
+class SelectionConstants {
+    companion object {
+        const val EQUALS = "E"
+        const val EQUALS_GREATER = "EG"
+        const val EQUALS_LESS = "EL"
+        const val LESS = "L"
+        const val GREATER = "G"
+    }
+}
+
 object ID
 // Fields for albums
 object ALBUM

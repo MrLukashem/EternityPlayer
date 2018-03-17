@@ -144,6 +144,10 @@ public class CustomMockContentProvider
             return processFancySearch(uri);
         }
 
+        if (selection != null && selectionArgs != null) {
+            return processQueryWithSelection(uri, selection, selectionArgs);
+        }
+
         Optional<DataSet> dataSetResult = dataSets.getStream().filter(
                 dataSet -> dataSet.cols.containsAll(Arrays.asList(projection))).findFirst();
 
@@ -199,6 +203,10 @@ public class CustomMockContentProvider
         StreamList<String> sourceCols = dataSet.cols;
         String[] cols = sourceCols.toArray(new String[sourceCols.size()]);
         return new MockCursor(cols, Collections.singletonList(dataSet.rows.get(0)));
+    }
+
+    private Cursor processQueryWithSelection(Uri uri, String selection, String[] selectionArgs) {
+        return null;
     }
 
     @Override

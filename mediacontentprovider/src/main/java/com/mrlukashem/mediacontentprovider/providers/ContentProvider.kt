@@ -5,6 +5,7 @@ import com.mrlukashem.mediacontentprovider.data.QueryView
 import com.mrlukashem.mediacontentprovider.types.ContentType
 
 typealias ResultCallback = (List<ContentView>) -> Unit
+typealias ContentViews = List<ContentView>
 
 interface ContentProvider {
     fun fetchContent(contentType: ContentType, resultCallback: ResultCallback? = null,

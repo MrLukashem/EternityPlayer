@@ -68,11 +68,11 @@ public class MediaDatabaseHandlerTests {
                 .setFieldProjection(FieldName.TITLE)
                 .setFieldProjection(FieldName.ALBUM)
                 .setSelectionOption(new QueryView.SelectionOption(
-                        FieldName.TITLE, "Iron Maiden", SelectionType.E))
+                        FieldName.TITLE, "Killers", SelectionType.E))
                 .build();
         List<ContentView> tracks = handler.query(queryView);
         Assert.assertTrue(tracks.size() > 0);
-        Assert.assertTrue(tracks.get(0).get(FieldName.TITLE).equals("Iron Maiden"));
+        Assert.assertTrue(tracks.get(0).get(FieldName.TITLE).equals("Killers"));
     }
 
     @Test

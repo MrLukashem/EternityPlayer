@@ -7,8 +7,8 @@ import android.provider.MediaStore
 
 import com.mrlukashem.mediacontentprovider.content.ContentView
 import com.mrlukashem.mediacontentprovider.content.MediaContentView
-import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.EQUALS
 import com.mrlukashem.mediacontentprovider.data.DataHandler.*
+import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.EQUALS
 import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.EQUALS_GREATER
 import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.EQUALS_LESS
 import com.mrlukashem.mediacontentprovider.data.SelectionConstants.Companion.GREATER
@@ -22,7 +22,7 @@ import kotlin.collections.HashSet
 fun String.Companion.empty() = ""
 
 typealias HandleGenerator = (Cursor) -> String
-// TODO: ErrorListener support?
+
 class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler {
     override fun query(queryView: QueryView): ContentViews {
         val extractor = QueryExtractor(queryView)
@@ -206,7 +206,8 @@ class MediaDatabaseHandler(private val resolver: ContentResolver) : DataHandler 
                     val op = matcher.groupValues[2]
                     val fieldValue = matcher.groupValues[3]
 
-                    vanillaSelection.add("$fieldName ${toVanillaOperator(op)} ?")
+                    vanillaSelection.add("${toVanillaField[FieldName.valueOf(fieldName)]}" +
+                            " ${toVanillaOperator(op)} ?")
                     vanillaSelectionArgs.add(fieldValue)
                 }
             }

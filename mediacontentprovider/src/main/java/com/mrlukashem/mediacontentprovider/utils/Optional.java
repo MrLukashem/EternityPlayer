@@ -23,6 +23,14 @@ public class Optional<T> {
         }
     }
 
+    public <R> R ifPresentWithResult(Function<? super T, R> fun) {
+        if (isPresent()) {
+            return fun.invoke(storedObject);
+        }
+
+        return null;
+    }
+
     public T get() {
         return storedObject;
     }

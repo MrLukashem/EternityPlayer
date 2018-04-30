@@ -25,12 +25,12 @@ class TasksDispatcher<T> : HandlerBasedDispatcher<T>(), Runnable {
 
     override fun begin() {
         synchronized(this) {
-            super.begin()
-
             ifNotAliveOrThrow {
                 handlerInitializedLock.close()
                 myThread.start()
                 handlerInitializedLock.block()
+
+                super.begin()
             }
         }
     }
@@ -42,7 +42,9 @@ class TasksDispatcher<T> : HandlerBasedDispatcher<T>(), Runnable {
     override fun quit() {
         synchronized(this) {
             super.quit()
-            looper.quitSafely()
+            if (isAlive()) {
+                looper.quitSafely()
+            }
         }
     }
 

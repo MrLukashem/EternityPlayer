@@ -8,14 +8,11 @@ typealias ResultCallback = (List<ContentView>) -> Unit
 typealias ContentViews = List<ContentView>
 
 interface ContentProvider {
-    fun fetchContent(contentType: ContentType, resultCallback: ResultCallback? = null,
+    fun fetchContent(contentType: ContentType, resultCallback: ResultCallback,
                      maxCapacity: Int = -1)
-    fun fetchContent(queryView: QueryView, resultCallback: ResultCallback? = null,
-                     maxCapacity: Int = -1)
+    fun fetchContent(queryView: QueryView, maxCapacity: Int = -1): ContentViews
     fun fetchContent(wildCardWorlds: List<String>, resultCallback: ResultCallback? = null,
                      maxCapacity: Int = -1)
-    fun fetchContentFromParent(contentParent: ContentView, resultCallback: ResultCallback? = null,
-                               maxCapacity: Int = -1)
-    fun fetchParent(contentChild: ContentView, resultCallback: ResultCallback? = null,
-                    maxCapacity: Int = -1)
+    fun fetchChildren(contentParent: ContentView, resultCallback: ResultCallback)
+    fun fetchParent(contentChild: ContentView, resultCallback: ResultCallback)
 }
